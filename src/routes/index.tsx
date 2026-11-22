@@ -109,6 +109,13 @@ function Hero() {
           <h1 className="mt-3 text-3xl uppercase leading-tight text-foreground sm:text-4xl md:text-7xl">
             Sensitivo e <span className="text-gold animate-shimmer">Chiaroveggente</span>
           </h1>
+          <div className="mt-5 flex items-center justify-center gap-3">
+            <span className="gold-rule hidden w-12 sm:block" />
+            <span className="inline-flex items-center gap-2 rounded-full border border-primary/50 bg-midnight/85 px-4 py-1.5 font-display text-xs uppercase tracking-[0.2em] text-gold shadow-glow backdrop-blur-md animate-shimmer sm:px-6 sm:py-2 sm:text-sm sm:tracking-[0.28em]">
+              ✦ Percezioni Extrasensoriali ✦
+            </span>
+            <span className="gold-rule hidden w-12 sm:block" />
+          </div>
         </Reveal>
         <Reveal delay={300}>
           <div className="mx-auto mt-10 max-w-xl rounded-xl border border-primary/50 bg-midnight/85 p-6 shadow-glow backdrop-blur-md md:p-8">
@@ -379,10 +386,14 @@ function Footer() {
 
 function MobileBar() {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-midnight/95 p-3 backdrop-blur-md lg:hidden">
-      <Button asChild variant="gold" size="lg" className="w-full">
-        <a href={telHref}><Phone /> Chiama ora 337 70 92 63</a>
-      </Button>
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-primary/40 bg-midnight/95 px-3 py-2.5 backdrop-blur-md lg:hidden">
+      <a
+        href={telHref}
+        className="mx-auto flex w-full max-w-md items-center justify-center gap-2 rounded-full bg-gold px-4 py-3 font-display text-xs font-semibold uppercase tracking-[0.12em] text-primary-foreground shadow-glow transition-opacity active:opacity-90 sm:text-sm"
+      >
+        <Phone className="h-4 w-4 shrink-0" />
+        <span>Chiama ora · 337 70 92 63</span>
+      </a>
     </div>
   );
 }

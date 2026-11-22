@@ -146,7 +146,7 @@ export function JazzPlayer() {
   if (!playing) return null;
 
   return (
-    <div className="fixed bottom-20 right-3 z-40 sm:right-4 lg:bottom-6">
+    <div className="fixed bottom-24 right-3 z-40 sm:right-4 lg:bottom-6">
       <button
         type="button"
         onClick={handleStop}
