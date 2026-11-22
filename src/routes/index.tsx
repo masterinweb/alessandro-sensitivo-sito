@@ -8,6 +8,7 @@ import { SectionTitle } from "@/components/site/SectionTitle";
 import { WriteToMe } from "@/components/site/WriteToMe";
 import { JazzPlayer } from "@/components/site/JazzPlayer";
 import { CookieBanner } from "@/components/site/CookieBanner";
+import { MysticCanvas } from "@/components/site/MysticCanvas";
 import { CONTACT, telHref } from "@/lib/contact";
 
 import consultoBlu from "@/assets/consulto-tramonto.jpeg.asset.json";
@@ -45,6 +46,7 @@ const NAV = [
 function Index() {
   return (
     <div className="relative overflow-x-hidden bg-background">
+      <MysticCanvas />
       <Header />
       <Hero />
       <PrimoPasso />
