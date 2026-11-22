@@ -103,7 +103,7 @@ function ChiSonoPage() {
             </Reveal>
 
             <Reveal delay={200}>
-              <div className="arcana-frame rounded-md bg-card/80 p-8 shadow-card backdrop-blur-sm md:p-12">
+              <div className="arcana-frame rounded-md bg-card/80 p-5 shadow-card backdrop-blur-sm sm:p-8 md:p-12">
                 <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/40 bg-midnight/70 px-4 py-1.5">
                   <Sparkles className="h-4 w-4 text-primary" />
                   <span className="font-display text-xs uppercase tracking-[0.25em] text-primary">

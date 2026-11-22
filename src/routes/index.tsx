@@ -62,7 +62,7 @@ function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-40 border-b border-border/60 bg-midnight/85 backdrop-blur-md">
       <div className="border-b border-primary/25 bg-primary/10 px-4 py-1.5 text-center">
-        <a href={telHref} className="inline-flex flex-wrap items-center justify-center gap-2 font-display text-xs uppercase tracking-[0.22em] text-primary transition-opacity hover:opacity-85">
+        <a href={telHref} className="inline-flex flex-wrap items-center justify-center gap-1.5 font-display text-[11px] uppercase tracking-[0.15em] text-primary transition-opacity hover:opacity-85 sm:gap-2 sm:text-xs sm:tracking-[0.22em]">
           <PhoneCall className="h-3.5 w-3.5 animate-pulse" />
           <span>Se hai bisogno, chiama subito!</span>
           <span className="font-semibold underline underline-offset-4">337 70 92 63</span>
@@ -89,7 +89,7 @@ function Header() {
 
 function Hero() {
   return (
-    <section className="relative flex min-h-[95svh] items-center justify-center pt-28">
+    <section className="relative flex min-h-[95svh] items-center justify-center pt-36 sm:pt-28">
       <img
         src="/images/alessandro-teschio.jpg"
         onError={(e) => { e.currentTarget.src = ritratto.url; }}
@@ -102,7 +102,7 @@ function Hero() {
           <p className="font-script text-5xl text-primary md:text-7xl">Alessandro</p>
         </Reveal>
         <Reveal delay={150}>
-          <h1 className="mt-3 text-4xl uppercase leading-tight text-foreground md:text-7xl">
+          <h1 className="mt-3 text-3xl uppercase leading-tight text-foreground sm:text-4xl md:text-7xl">
             Sensitivo e <span className="text-gold animate-shimmer">Chiaroveggente</span>
           </h1>
         </Reveal>
@@ -132,7 +132,7 @@ function PrimoPasso() {
       <div className="starfield absolute inset-0 animate-twinkle opacity-60" />
       <div className="relative mx-auto max-w-6xl px-5">
         <Reveal>
-          <div className="arcana-frame relative overflow-hidden rounded-lg border border-primary/50 bg-midnight/85 p-8 shadow-glow backdrop-blur-md md:p-12">
+          <div className="arcana-frame relative overflow-hidden rounded-lg border border-primary/50 bg-midnight/85 p-5 shadow-glow backdrop-blur-md sm:p-8 md:p-12">
             <div className="grid items-center gap-10 lg:grid-cols-[0.8fr_1.2fr]">
               <img
                 src="/images/quadrato-sator.jpeg" alt="Il teschio del Sator — Vi propongo il primo passo: conoscermi"
@@ -254,10 +254,10 @@ function WarholConsulti() {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {tiles.map((tile) => (
               <div key={tile.h} className={`relative flex h-64 items-center justify-center overflow-hidden rounded-md border p-6 shadow-card transition-transform duration-500 hover:scale-[1.02] ${tile.bg}`}>
-                <span aria-hidden className="pointer-events-none select-none font-display text-4xl font-bold uppercase tracking-[0.25em] text-foreground/15 [writing-mode:vertical-rl]">
+                <span aria-hidden className="pointer-events-none select-none font-display text-2xl font-bold uppercase tracking-[0.2em] text-foreground/15 sm:text-4xl sm:tracking-[0.25em] [writing-mode:vertical-rl]">
                   {tile.v}
                 </span>
-                <span className={`absolute inset-x-3 text-center font-display text-xl font-semibold uppercase tracking-[0.2em] drop-shadow ${tile.accent}`}>
+                <span className={`absolute inset-x-3 text-center font-display text-lg font-semibold uppercase tracking-[0.16em] sm:text-xl sm:tracking-[0.2em] drop-shadow ${tile.accent}`}>
                   {tile.h}
                 </span>
                 <span aria-hidden className="pointer-events-none absolute bottom-3 right-4 font-display text-xs uppercase tracking-[0.35em] text-foreground/45">
