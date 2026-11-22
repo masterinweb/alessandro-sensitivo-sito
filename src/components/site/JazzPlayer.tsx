@@ -118,7 +118,6 @@ export function JazzPlayer() {
         (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       const ctx = new AudioCtx();
 
-      // Sblocco buffer hardware su iOS Safari e Android Chrome
       const silentBuf = ctx.createBuffer(1, 1, 22050);
       const silentSrc = ctx.createBufferSource();
       silentSrc.buffer = silentBuf;
@@ -158,7 +157,6 @@ export function JazzPlayer() {
         triggerPianoKey(ctx, delay, freq, when, dur, vel * 0.45);
       };
 
-      // Nuova composizione casuale diversa a ogni avvio o riaccensione
       const progression = PROGRESSIONS[Math.floor(Math.random() * PROGRESSIONS.length)];
       const transpose = [0.8909, 0.94387, 1.0, 1.05946, 1.12246][Math.floor(Math.random() * 5)];
       const barDurationSec = 3.8 + Math.random() * 0.9;
@@ -171,7 +169,7 @@ export function JazzPlayer() {
         const chord = progression[barCount % progression.length].map((f) => f * transpose);
         barCount++;
 
-        // Mano sinistra: basso + arpeggio caldo (singole frequenze numeriche!)
+        // Mano sinistra: singole note dell'accordo arpeggiato
         playToRoom(chord[0], now, barDurationSec * 0.95, 0.3);
         playToRoom(chord[1], now + 0.5, barDurationSec * 0.78, 0.19);
         playToRoom(chord[2], now + 1.0, barDurationSec * 0.7, 0.18);
