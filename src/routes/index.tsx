@@ -1,44 +1,21 @@
 import type { ReactNode } from "react";
-import { createFileRoute } from "@tanstack/react-router";
-import {
-  Briefcase,
-  Eye,
-  Facebook,
-  Globe,
-  Heart,
-  Mail,
-  MapPin,
-  MessageCircle,
-  Phone,
-  Shield,
-  Sparkles,
-  Youtube,
-} from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Facebook, Globe, Mail, MapPin, Phone, PhoneCall, Youtube } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { LightCard } from "@/components/site/LightCard";
 import { Reveal } from "@/components/site/Reveal";
 import { SectionTitle } from "@/components/site/SectionTitle";
 import { WriteToMe } from "@/components/site/WriteToMe";
-import { CONTACT, telHref, whatsappHref } from "@/lib/contact";
+import { JazzPlayer } from "@/components/site/JazzPlayer";
+import { CONTACT, telHref } from "@/lib/contact";
 
-import hero from "@/assets/ponte-di-luce.jpg.asset.json";
-import occhioOro from "@/assets/occhio-oro.jpeg.asset.json";
-import consulto from "@/assets/consulto-tramonto.jpeg.asset.json";
-import libro from "@/assets/libro-candele.jpeg.asset.json";
-import sigillo from "@/assets/sigillo-luna.jpeg.asset.json";
-import sguardo from "@/assets/sguardo-rosso.jpeg.asset.json";
-import veggente from "@/assets/occhio-veggente.jpeg.asset.json";
-import pendolo from "@/assets/pendolo.jpeg.asset.json";
-import tetra from "@/assets/tetragrammaton.jpeg.asset.json";
+import consultoBlu from "@/assets/consulto-tramonto.jpeg.asset.json";
+import libroRosso from "@/assets/libro-candele.jpeg.asset.json";
+import sigilloLuna from "@/assets/sigillo-luna.jpeg.asset.json";
 import ritratto from "@/assets/alessandro-ritratto.jpg.asset.json";
-import occhiDipinti from "@/assets/occhi-dipinti.jpeg.asset.json";
-import sator from "@/assets/quadrato-sator.jpeg.asset.json";
-import libroOro from "@/assets/libro-candele-oro.jpeg.asset.json";
 
-const TITLE = "Alessandro Della Marca — Sensitivo e Chiaroveggente Toscano";
-const DESCRIPTION =
-  "Alessandro Sensitivo, il veggente toscano che negli anni '90 era il Mago dei VIP. Consulti di chiaroveggenza, tarocchi, amore e lavoro in tutta Italia. Chiama il 337 709263.";
+const TITLE = "Alessandro — Sensitivo e Chiaroveggente";
+const DESCRIPTION = "Alessandro, Sensitivo e Chiaroveggente. Storico numero a sei cifre 337 70 92 63 attivo da 52 anni. Se hai bisogno, chiama subito.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -52,31 +29,15 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "/" }],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Person",
-          name: CONTACT.name,
-          alternateName: ["Alessandro Sensitivo", "Alexander"],
-          jobTitle: "Sensitivo chiaroveggente",
-          telephone: CONTACT.phoneE164,
-          email: CONTACT.email,
-          address: { "@type": "PostalAddress", addressLocality: "Grosseto", addressCountry: "IT" },
-          sameAs: [CONTACT.website, CONTACT.facebook, CONTACT.youtube, CONTACT.tiktok],
-        }),
-      },
-    ],
   }),
   component: Index,
 });
 
 const NAV = [
-  { href: "#luce", label: "La luce" },
-  { href: "#storia", label: "La storia" },
-  { href: "#consulti", label: "Consulti" },
-  { href: "#carta", label: "La tua carta" },
+  { href: "/chi-sono", label: "Chi sono", isRoute: true },
+  { href: "#primo-passo", label: "Il primo passo" },
+  { href: "#storia", label: "Chi è Alessandro" },
+  { href: "#consulenze", label: "Consulti" },
   { href: "#contatti", label: "Contatti" },
 ];
 
@@ -85,14 +46,13 @@ function Index() {
     <div className="relative overflow-x-hidden bg-background">
       <Header />
       <Hero />
-      <Manifesto />
+      <PrimoPasso />
+      <FigureScorrimento />
       <Storia />
-      <Consulti />
-      <Autentico />
-      <Carta />
-      <Galleria />
+      <WarholConsulti />
       <Contatti />
       <Footer />
+      <JazzPlayer />
       <MobileBar />
     </div>
   );
@@ -100,26 +60,27 @@ function Index() {
 
 function Header() {
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border-b border-border/60 bg-midnight/70 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5">
-        <a href="#" className="font-script text-3xl text-primary">
-          Alessandro Sensitivo
+    <header className="fixed inset-x-0 top-0 z-40 border-b border-border/60 bg-midnight/85 backdrop-blur-md">
+      <div className="border-b border-primary/25 bg-primary/10 px-4 py-1.5 text-center">
+        <a href={telHref} className="inline-flex flex-wrap items-center justify-center gap-2 font-display text-xs uppercase tracking-[0.22em] text-primary transition-opacity hover:opacity-85">
+          <PhoneCall className="h-3.5 w-3.5 animate-pulse" />
+          <span>Se hai bisogno, chiama subito!</span>
+          <span className="font-semibold underline underline-offset-4">337 70 92 63</span>
         </a>
+      </div>
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5">
+        <a href="#" className="font-script text-3xl text-primary">Alessandro</a>
         <nav className="hidden items-center gap-8 lg:flex">
-          {NAV.map((n) => (
-            <a
-              key={n.href}
-              href={n.href}
-              className="font-display text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:text-primary"
-            >
-              {n.label}
-            </a>
-          ))}
+          {NAV.map((n) =>
+            n.isRoute ? (
+              <Link key={n.href} to={n.href} className="font-display text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:text-primary">{n.label}</Link>
+            ) : (
+              <a key={n.href} href={n.href} className="font-display text-xs uppercase tracking-[0.25em] text-muted-foreground transition-colors hover:text-primary">{n.label}</a>
+            ),
+          )}
         </nav>
         <Button asChild variant="veil" size="sm" className="hidden sm:inline-flex">
-          <a href={telHref}>
-            <Phone /> {CONTACT.phoneDisplay}
-          </a>
+          <a href={telHref}><Phone /> 337 70 92 63</a>
         </Button>
       </div>
     </header>
@@ -128,226 +89,34 @@ function Header() {
 
 function Hero() {
   return (
-    <section className="relative flex min-h-[100svh] items-center justify-center pt-16">
+    <section className="relative flex min-h-[95svh] items-center justify-center pt-28">
       <img
-        src={hero.url}
-        alt="Due mani unite da un ponte di luce dorata sopra le colline toscane di notte"
-        className="absolute inset-0 h-full w-full object-cover"
+        src="/images/alessandro-teschio.jpg"
+        onError={(e) => { e.currentTarget.src = ritratto.url; }}
+        alt="Alessandro Sensitivo e Chiaroveggente"
+        className="absolute inset-0 h-full w-full object-cover object-top grayscale"
       />
-      <div className="bg-veil absolute inset-0" />
-      <div className="relative mx-auto max-w-4xl px-5 pb-24 pt-10 text-center">
+      <div className="absolute inset-0 bg-gradient-to-b from-midnight/75 via-midnight/60 to-background" />
+      <div className="relative mx-auto max-w-4xl px-5 pb-16 pt-10 text-center">
         <Reveal>
-          <p className="font-script text-4xl text-primary md:text-6xl">Alessandro Della Marca</p>
+          <p className="font-script text-5xl text-primary md:text-7xl">Alessandro</p>
         </Reveal>
         <Reveal delay={150}>
-          <h1 className="mt-4 text-4xl uppercase leading-tight text-foreground md:text-7xl">
-            Un ponte di <span className="text-gold animate-shimmer">luce</span>
-            <br /> tra te e la tua strada
+          <h1 className="mt-3 text-4xl uppercase leading-tight text-foreground md:text-7xl">
+            Sensitivo e <span className="text-gold animate-shimmer">Chiaroveggente</span>
           </h1>
         </Reveal>
         <Reveal delay={300}>
-          <p className="mx-auto mt-8 max-w-2xl text-xl leading-relaxed text-foreground/85 md:text-2xl">
-            Sensitivo e chiaroveggente toscano. Trent'anni con lo stesso nome, lo stesso volto e lo
-            stesso numero di telefono, sempre dalla parte delle persone.
-          </p>
-        </Reveal>
-        <Reveal delay={450}>
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button asChild variant="gold" size="xl">
-              <a href={telHref}>
-                <Phone /> Chiama {CONTACT.phoneDisplay}
-              </a>
-            </Button>
-            <Button asChild variant="veil" size="xl">
-              <a href={whatsappHref()} target="_blank" rel="noopener noreferrer">
-                <MessageCircle /> Scrivi su WhatsApp
-              </a>
-            </Button>
-          </div>
-          <p className="mt-6 font-display text-xs uppercase tracking-[0.35em] text-muted-foreground">
-            Il primo passo: una chiamata
-          </p>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-function Manifesto() {
-  return (
-    <section id="luce" className="relative scroll-mt-16 py-28 md:py-36">
-      <div className="starfield absolute inset-0 animate-twinkle opacity-60" />
-      <div className="relative mx-auto max-w-4xl px-5 text-center">
-        <Reveal>
-          <SectionTitle kicker="Il suo credo" title="Lo stesso lume per tutti" />
-        </Reveal>
-        <Reveal delay={150}>
-          <blockquote className="mt-14 text-2xl leading-relaxed text-foreground md:text-[2rem] md:leading-snug">
-            <span className="text-gold font-display text-6xl leading-none">“</span>
-            Per me non esistono classi, appartenenze o etichette. Ogni persona è un{" "}
-            <em className="text-primary">essere di luce</em>, venuto sulla Terra per nutrire gli
-            altri e lasciarsi nutrire.
-          </blockquote>
-        </Reveal>
-        <Reveal delay={300}>
-          <p className="mx-auto mt-10 max-w-3xl text-xl leading-relaxed text-muted-foreground md:text-2xl">
-            Il mondo è com'è perché troppo spesso si cerca di spegnere la luce altrui per brillare di
-            più. Ma Dio ha dato a tutti lo stesso lume e le stesse possibilità: sta a noi farle
-            crescere nel modo giusto.
-          </p>
-          <p className="mt-10 font-script text-4xl text-primary">Alessandro</p>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-const TIMELINE = [
-  {
-    era: "Le radici",
-    title: "Firenze, pane ed esoterismo",
-    text: "Nato in una famiglia nobile e cresciuto nella Firenze bene, fin da bambino mostra un dono particolare per le persone: sempre pronto a fare da scudo, da mentore, a volte da insegnante.",
-  },
-  {
-    era: "Anni '90",
-    title: "Il Mago dei VIP",
-    text: "Con il nome d'arte Alexander frequenta i salotti buoni ed entra in televisione, dove esegue dal vivo esperimenti esoterici, anche a Uno Mattina. Mai come fenomeno da baraccone.",
-  },
-  {
-    era: "La scelta",
-    title: "Lontano dal mondo finto",
-    text: "Assaporata la finzione dello spettacolo, decide di lasciarlo per dedicarsi davvero ai suoi cari. E per lui sono cari tutti: amici, clienti, chiunque bussi alla sua porta.",
-  },
-  {
-    era: "Oggi",
-    title: "Un ponte di energia pura",
-    text: "Dalla sede di Grosseto segue persone in tutta Italia, al telefono e online. Con un'unica missione: aiutarti a tirare fuori il tuo vero potenziale.",
-  },
-];
-
-function Storia() {
-  return (
-    <section id="storia" className="relative scroll-mt-16 bg-night py-28 md:py-36">
-      <div className="mx-auto max-w-6xl px-5">
-        <Reveal>
-          <SectionTitle kicker="Chi è Alessandro" title="Una vita al servizio degli altri" />
-        </Reveal>
-        <div className="mt-20 grid items-start gap-16 lg:grid-cols-[1fr_1.2fr]">
-          <Reveal className="lg:sticky lg:top-28">
-            <figure className="arcana-frame overflow-hidden rounded-md shadow-card">
-              <img
-                src={ritratto.url}
-                alt="Alessandro Della Marca negli anni '90, ritratto in bianco e nero"
-                className="w-full object-cover grayscale"
-                loading="lazy"
-              />
-              <figcaption className="border-t border-primary/30 bg-midnight/80 px-5 py-3 text-center">
-                <span className="font-script text-3xl text-primary">Alexander</span>
-                <span className="ml-3 font-display text-xs uppercase tracking-[0.3em] text-muted-foreground">
-                  anni '90
-                </span>
-              </figcaption>
-            </figure>
-          </Reveal>
-          <ol className="relative space-y-14 border-l border-primary/30 pl-10">
-            {TIMELINE.map((t, i) => (
-              <Reveal key={t.title} delay={i * 100}>
-                <li className="relative">
-                  <span className="absolute -left-[2.85rem] top-1 flex h-5 w-5 items-center justify-center rounded-full border border-primary bg-background shadow-glow">
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                  </span>
-                  <p className="font-display text-xs uppercase tracking-[0.35em] text-primary">{t.era}</p>
-                  <h3 className="mt-2 text-2xl uppercase text-foreground md:text-3xl">{t.title}</h3>
-                  <p className="mt-4 text-xl leading-relaxed text-muted-foreground">{t.text}</p>
-                </li>
-              </Reveal>
-            ))}
-          </ol>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-const CONSULTI = [
-  {
-    n: "I",
-    icon: Eye,
-    title: "Chiaroveggenza",
-    text: "Uno sguardo oltre il visibile per capire cosa sta accadendo davvero e dove ti porta.",
-  },
-  {
-    n: "II",
-    icon: Heart,
-    title: "Amore e coppia",
-    text: "Crisi, distacchi, nuovi incontri, ritorni. Per leggere i sentimenti senza illusioni.",
-  },
-  {
-    n: "III",
-    icon: Briefcase,
-    title: "Lavoro e affari",
-    text: "Scelte, opportunità e collaborazioni: dove conviene investire le tue energie.",
-  },
-  {
-    n: "IV",
-    icon: Sparkles,
-    title: "Tarocchi e pendolo",
-    text: "Arcani Maggiori e Minori, radiestesia e simboli antichi per mettere ordine nei pensieri.",
-  },
-  {
-    n: "V",
-    icon: Shield,
-    title: "Rituali e protezione",
-    text: "Per liberarti da energie pesanti e proteggere la tua luce da chi vorrebbe spegnerla.",
-  },
-];
-
-function Consulti() {
-  return (
-    <section id="consulti" className="relative scroll-mt-16 py-28 md:py-36">
-      <div className="mx-auto max-w-7xl px-5">
-        <Reveal>
-          <SectionTitle kicker="I consulti" title="Cinque porte verso la chiarezza" />
-        </Reveal>
-        <div className="mt-20 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
-          {CONSULTI.map((c, i) => (
-            <Reveal key={c.title} delay={i * 90}>
-              <article className="arcana-frame group flex h-full flex-col items-center rounded-md bg-card p-8 text-center shadow-card transition-all duration-500 hover:-translate-y-2 hover:shadow-glow">
-                <span className="font-display text-sm tracking-[0.3em] text-muted-foreground">{c.n}</span>
-                <div className="my-8 flex h-20 w-20 items-center justify-center rounded-full border border-primary/40 transition-colors group-hover:border-primary">
-                  <c.icon className="h-8 w-8 text-primary" strokeWidth={1.2} />
-                </div>
-                <h3 className="text-lg uppercase text-foreground">{c.title}</h3>
-                <div className="gold-rule my-5 w-12" />
-                <p className="text-lg leading-relaxed text-muted-foreground">{c.text}</p>
-              </article>
-            </Reveal>
-          ))}
-        </div>
-        <Reveal>
-          <div className="mt-20 grid items-center gap-12 lg:grid-cols-2">
-            <img
-              src={consulto.url}
-              alt="Chiarezza e comprensione profonda: due mani su un tavolo al tramonto"
-              className="arcana-frame w-full rounded-md shadow-card"
-              loading="lazy"
-            />
-            <div>
-              <h3 className="text-3xl uppercase text-foreground md:text-4xl">
-                Ascolto profondo, <span className="text-gold">nessuna illusione</span>
-              </h3>
-              <p className="mt-6 text-xl leading-relaxed text-muted-foreground">
-                «Non posso garantirti risultati immediati, ma un cambiamento reale, una ritrovata
-                energia e la voglia di fare: questo te lo posso garantire.»
-              </p>
-              <p className="mt-4 text-xl leading-relaxed text-muted-foreground">
-                Ogni consulto parte dall'ascolto. Alessandro ti dirà sempre la verità e saprà esserti
-                amico.
-              </p>
-              <Button asChild variant="gold" size="xl" className="mt-10">
-                <a href={telHref}>
-                  <Phone /> Prenota il tuo consulto
-                </a>
+          <div className="mx-auto mt-10 max-w-xl rounded-xl border border-primary/50 bg-midnight/85 p-6 shadow-glow backdrop-blur-md md:p-8">
+            <a href={telHref} aria-label="Chiama lo storico numero 337 70 92 63" className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border-2 border-primary bg-primary/15 text-primary shadow-glow transition-transform duration-300 hover:scale-110">
+              <PhoneCall className="h-8 w-8" strokeWidth={1.6} />
+            </a>
+            <p className="mt-4 font-display text-xs uppercase tracking-[0.3em] text-primary">
+              Storico numero attivo da 52 anni
+            </p>
+            <div className="mt-5">
+              <Button asChild variant="gold" size="xl" className="w-full sm:w-auto">
+                <a href={telHref}><Phone /> Chiama ora 337 70 92 63</a>
               </Button>
             </div>
           </div>
@@ -357,90 +126,155 @@ function Consulti() {
   );
 }
 
-const PILLARS = [
-  { title: "Nome e cognome veri", text: "Alessandro Della Marca. Nessuno pseudonimo dietro cui nascondersi." },
-  { title: "Lo stesso numero da 30 anni", text: "337 709263: chi ti conosce davvero non ha bisogno di cambiare numero." },
-  { title: "Nessuna promessa impossibile", text: "Solo verità, rispetto e un percorso che resta sempre nelle tue mani." },
-];
-
-function Autentico() {
+function PrimoPasso() {
   return (
-    <section className="relative overflow-hidden py-28 md:py-36">
-      <img src={sguardo.url} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover opacity-25" />
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-background/80 to-background" />
+    <section id="primo-passo" className="relative scroll-mt-24 overflow-hidden py-20 md:py-28">
+      <div className="starfield absolute inset-0 animate-twinkle opacity-60" />
       <div className="relative mx-auto max-w-6xl px-5">
         <Reveal>
-          <SectionTitle kicker="Diffida dalle imitazioni" title="Il web è pieno di ciarlatani" />
-          <p className="mx-auto mt-10 max-w-3xl text-center text-xl leading-relaxed text-muted-foreground md:text-2xl">
-            Millantatori e truffatori cercano di rubare la scena a chi lavora con il cuore. Prima di
-            fare scelte sbagliate, chiama Alessandro e mettilo alla prova.
-          </p>
-        </Reveal>
-        <div className="mt-16 grid gap-6 md:grid-cols-3">
-          {PILLARS.map((p, i) => (
-            <Reveal key={p.title} delay={i * 120}>
-              <div className="h-full rounded-md border border-primary/30 bg-midnight/70 p-8 backdrop-blur-sm">
-                <span className="text-gold font-display text-4xl">0{i + 1}</span>
-                <h3 className="mt-4 text-xl uppercase text-foreground">{p.title}</h3>
-                <p className="mt-3 text-lg leading-relaxed text-muted-foreground">{p.text}</p>
+          <div className="arcana-frame relative overflow-hidden rounded-lg border border-primary/50 bg-midnight/85 p-8 shadow-glow backdrop-blur-md md:p-12">
+            <div className="grid items-center gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+              <img
+                src="/images/quadrato-sator.jpeg" alt="Il teschio del Sator — Vi propongo il primo passo: conoscermi"
+                className="arcana-frame mx-auto w-full max-w-sm rounded-md shadow-card"
+                loading="lazy"
+              />
+              <div className="text-center lg:text-left">
+                <p className="font-display text-xs uppercase tracking-[0.35em] text-primary">Un contatto diretto e sincero</p>
+                <h2 className="mt-4 text-3xl uppercase leading-tight text-foreground md:text-5xl">
+                  Vi propongo il primo passo: <span className="text-gold animate-shimmer">conoscermi</span>
+                </h2>
+                <div className="gold-rule mx-auto my-6 w-24 lg:mx-0" />
+                <p className="text-xl leading-relaxed text-foreground/95 md:text-2xl md:leading-relaxed">
+                  Starete bene sin da subito e sentirete immediatamente cosa significa e cosa si prova davvero nel parlare con un sensitivo.
+                </p>
+                <p className="mt-5 text-xl leading-relaxed text-muted-foreground md:text-2xl md:leading-relaxed">
+                  Basta una semplice telefonata per vivere questa esperienza: affronteremo insieme la tua domanda per darti fin dal primo momento una risposta chiara, rassicurante ed esaustiva.
+                </p>
+                <div className="mt-8">
+                  <Button asChild variant="gold" size="xl">
+                    <a href={telHref}><Phone /> Telefona ora · 337 70 92 63</a>
+                  </Button>
+                </div>
               </div>
-            </Reveal>
-          ))}
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+function FigureScorrimento() {
+  return (
+    <section className="relative bg-night py-20 md:py-28">
+      <div className="mx-auto max-w-5xl px-5">
+        <div className="grid gap-10 md:grid-cols-2">
+          <Reveal>
+            <figure className="arcana-frame overflow-hidden rounded-md shadow-card">
+              <img src={ritratto.url} alt="Alessandro" loading="lazy" className="aspect-[4/5] w-full object-cover transition-transform duration-700 hover:scale-[1.03]" />
+            </figure>
+          </Reveal>
+          <Reveal delay={150}>
+            <figure className="arcana-frame overflow-hidden rounded-md shadow-card">
+              <img src={sigilloLuna.url} alt="Luna e occhio" loading="lazy" className="aspect-[4/5] w-full object-cover transition-transform duration-700 hover:scale-[1.03]" />
+            </figure>
+          </Reveal>
         </div>
       </div>
     </section>
   );
 }
+const TIMELINE = [
+  {
+    era: "La scelta",
+    title: "Lontano dal mondo finto",
+    text: "Assaporata la finzione dello spettacolo, decide di lasciarlo per dedicarsi davvero ai suoi cari. E per lui sono cari tutti: amici, clienti, chiunque bussi alla sua porta.",
+  },
+  {
+    era: "Oggi",
+    title: "Ascolto autentico in tutta Italia",
+    text: "Dalla sede di Grosseto segue persone in tutta Italia con serietà, riservatezza e lo stesso numero storico attivo da 52 anni.",
+  },
+];
 
-function Carta() {
+function Storia() {
   return (
-    <section id="carta" className="relative scroll-mt-16 bg-night py-28 md:py-36">
-      <div className="starfield absolute inset-0 animate-twinkle opacity-50" />
-      <div className="relative mx-auto max-w-5xl px-5">
+    <section id="storia" className="relative scroll-mt-24 py-24 md:py-32">
+      <div className="mx-auto max-w-4xl px-5">
         <Reveal>
-          <SectionTitle kicker="Un dono per te" title="Pesca la tua carta di luce" />
-          <p className="mx-auto mt-8 max-w-xl text-center text-xl text-muted-foreground">
-            Chiudi gli occhi, respira, pensa a ciò che ti sta a cuore. Poi tocca la carta.
-          </p>
+          <div className="text-center">
+            <h2 className="text-3xl uppercase text-foreground md:text-5xl">
+              Chi è <span className="text-gold">Alessandro</span>
+            </h2>
+            <div className="gold-rule mx-auto mt-6 w-24" />
+          </div>
         </Reveal>
-        <Reveal delay={150} className="mt-16">
-          <LightCard />
-        </Reveal>
+        <ol className="relative mt-16 space-y-14 border-l border-primary/30 pl-10">
+          {TIMELINE.map((t, i) => (
+            <Reveal key={t.title} delay={i * 100}>
+              <li className="relative">
+                <span className="absolute -left-[2.85rem] top-1 flex h-5 w-5 items-center justify-center rounded-full border border-primary bg-background shadow-glow">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                </span>
+                <p className="font-display text-xs uppercase tracking-[0.35em] text-primary">{t.era}</p>
+                <h3 className="mt-2 text-2xl uppercase text-foreground md:text-3xl">{t.title}</h3>
+                <p className="mt-4 text-xl leading-relaxed text-muted-foreground">{t.text}</p>
+              </li>
+            </Reveal>
+          ))}
+        </ol>
       </div>
     </section>
   );
 }
 
-const GALLERY = [
-  { src: occhiDipinti.url, alt: "L'occhio del veggente: due occhi di fuoco sotto una stella" },
-  { src: veggente.url, alt: "L'occhio del veggente" },
-  { src: occhioOro.url, alt: "Occhio dorato da cui scende un raggio di luce" },
-  { src: sigillo.url, alt: "Sigillo con luna e occhio, Alessandro Sensitivo" },
-  { src: libro.url, alt: "Libro con pentacolo tra le candele" },
-  { src: pendolo.url, alt: "Pendolo di lapislazzuli su una carta astrale" },
-  { src: tetra.url, alt: "Pentacolo del Tetragrammaton dorato" },
-  { src: sator.url, alt: "Antico teschio inciso con il quadrato del Sator" },
-  { src: libroOro.url, alt: "Libro nero con pentacolo tra candele accese" },
-];
+function WarholConsulti() {
+  const tiles = [
+    { h: "CHIAROVEGGENZA", v: "VERITÀ", bg: "bg-emerald-950/80 border-emerald-400/50", accent: "text-emerald-300" },
+    { h: "AMORE", v: "ASCOLTO", bg: "bg-amber-950/70 border-primary/60", accent: "text-primary" },
+    { h: "LAVORO", v: "FUTURO", bg: "bg-indigo-950/80 border-indigo-400/50", accent: "text-indigo-200" },
+    { h: "CHIAREZZA", v: "FIDUCIA", bg: "bg-rose-950/70 border-rose-400/50", accent: "text-rose-200" },
+  ];
 
-function Galleria() {
   return (
-    <section className="py-28 md:py-36">
-      <div className="mx-auto max-w-7xl px-5">
+    <section id="consulenze" className="relative scroll-mt-24 bg-night py-24 md:py-32">
+      <div className="mx-auto max-w-6xl px-5">
         <Reveal>
-          <SectionTitle kicker="Dal suo studio" title="Simboli e strumenti" />
+          <div className="mb-14 flex flex-col items-center text-center">
+            <div className="flex h-28 w-28 items-center justify-center rounded-full border border-emerald-400/50 bg-emerald-950/50 shadow-[0_0_45px_rgba(16,185,129,0.3)]">
+              <svg viewBox="0 0 64 64" className="h-16 w-16" aria-label="Stella Verde">
+                <polygon points="32,4 39,23 59,23 43,35 49,55 32,43 15,55 21,35 5,23 25,23" fill="#10B981" stroke="#6EE7B7" strokeWidth="2" />
+              </svg>
+            </div>
+          </div>
         </Reveal>
-        <div className="mt-16 columns-1 gap-6 sm:columns-2 lg:columns-3">
-          {GALLERY.map((g, i) => (
-            <Reveal key={g.src} delay={i * 80} className="mb-6 break-inside-avoid">
-              <img
-                src={g.src}
-                alt={g.alt}
-                loading="lazy"
-                className="arcana-frame w-full rounded-md shadow-card transition-transform duration-700 hover:scale-[1.02]"
-              />
-            </Reveal>
-          ))}
+
+        <Reveal delay={100}>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {tiles.map((tile) => (
+              <div key={tile.h} className={`relative flex h-64 items-center justify-center overflow-hidden rounded-md border p-6 shadow-card transition-transform duration-500 hover:scale-[1.02] ${tile.bg}`}>
+                <span aria-hidden className="pointer-events-none select-none font-display text-4xl font-bold uppercase tracking-[0.25em] text-foreground/15 [writing-mode:vertical-rl]">
+                  {tile.v}
+                </span>
+                <span className={`absolute inset-x-3 text-center font-display text-xl font-semibold uppercase tracking-[0.2em] drop-shadow ${tile.accent}`}>
+                  {tile.h}
+                </span>
+                <span aria-hidden className="pointer-events-none absolute bottom-3 right-4 font-display text-xs uppercase tracking-[0.35em] text-foreground/45">
+                  {tile.v}
+                </span>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+
+        <div className="mt-16 grid gap-10 md:grid-cols-2">
+          <Reveal>
+            <img src={consultoBlu.url} alt="Ascolto e comprensione profonda" loading="lazy" className="arcana-frame aspect-[4/3] w-full rounded-md object-cover shadow-card" />
+          </Reveal>
+          <Reveal delay={120}>
+            <img src={libroRosso.url} alt="Libro con candele accese" loading="lazy" className="arcana-frame aspect-[4/3] w-full rounded-md object-cover shadow-card" />
+          </Reveal>
         </div>
       </div>
     </section>
@@ -449,20 +283,18 @@ function Galleria() {
 
 function Contatti() {
   const items = [
-    { icon: Phone, label: "Telefono", value: CONTACT.phoneDisplay, href: telHref },
-    { icon: MessageCircle, label: "WhatsApp", value: CONTACT.phoneDisplay, href: whatsappHref() },
+    { icon: Phone, label: "Telefono · Storico numero da 52 anni", value: "337 70 92 63", href: telHref },
     { icon: Mail, label: "Email", value: CONTACT.email, href: `mailto:${CONTACT.email}` },
     { icon: Globe, label: "Altro sito", value: CONTACT.websiteDisplay, href: CONTACT.website },
     { icon: MapPin, label: "Sede principale", value: "Grosseto · consulti in tutta Italia", href: undefined },
   ];
   return (
-    <section id="contatti" className="relative scroll-mt-16 bg-night py-28 md:py-36">
+    <section id="contatti" className="relative scroll-mt-24 py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-5">
         <Reveal>
           <SectionTitle kicker="Mettiti in contatto" title="Alessandro ti risponde" />
           <p className="mx-auto mt-8 max-w-2xl text-center text-xl text-muted-foreground">
-            Rispondo subito, oppure ti richiamo appena posso. Al telefono, su WhatsApp o online,
-            ovunque tu sia.
+            Rispondo subito, oppure ti richiamo appena posso al telefono.
           </p>
         </Reveal>
         <div className="mt-16 grid gap-12 lg:grid-cols-2">
@@ -475,21 +307,13 @@ function Contatti() {
                       <it.icon className="h-5 w-5 text-primary" strokeWidth={1.4} />
                     </span>
                     <span>
-                      <span className="block font-display text-xs uppercase tracking-[0.25em] text-muted-foreground">
-                        {it.label}
-                      </span>
+                      <span className="block font-display text-xs uppercase tracking-[0.25em] text-muted-foreground">{it.label}</span>
                       <span className="block break-all text-xl text-foreground">{it.value}</span>
                     </span>
                   </>
                 );
                 return it.href ? (
-                  <a
-                    key={it.label}
-                    href={it.href}
-                    target={it.href.startsWith("http") ? "_blank" : undefined}
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-5 rounded-md border border-border bg-card/60 p-5 transition-colors hover:border-primary/60"
-                  >
+                  <a key={it.label} href={it.href} target={it.href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" className="flex items-center gap-5 rounded-md border border-border bg-card/60 p-5 transition-colors hover:border-primary/60">
                     {inner}
                   </a>
                 ) : (
@@ -498,25 +322,24 @@ function Contatti() {
                   </div>
                 );
               })}
+
+              <div className="pt-4">
+                <Button asChild variant="gold" size="xl" className="w-full">
+                  <a href={telHref}><Phone /> Chiama Alessandro · 337 70 92 63</a>
+                </Button>
+              </div>
+
               <div className="flex gap-3 pt-4">
-                <SocialLink href={CONTACT.facebook} label="Facebook">
-                  <Facebook className="h-5 w-5" strokeWidth={1.4} />
-                </SocialLink>
-                <SocialLink href={CONTACT.youtube} label="YouTube">
-                  <Youtube className="h-5 w-5" strokeWidth={1.4} />
-                </SocialLink>
-                <SocialLink href={CONTACT.tiktok} label="TikTok">
-                  <span className="font-display text-xs">TT</span>
-                </SocialLink>
+                <SocialLink href={CONTACT.facebook} label="Facebook"><Facebook className="h-5 w-5" strokeWidth={1.4} /></SocialLink>
+                <SocialLink href={CONTACT.youtube} label="YouTube"><Youtube className="h-5 w-5" strokeWidth={1.4} /></SocialLink>
+                <SocialLink href={CONTACT.tiktok} label="TikTok"><span className="font-display text-xs">TT</span></SocialLink>
               </div>
             </div>
           </Reveal>
           <Reveal delay={150}>
             <div className="arcana-frame rounded-md bg-card p-8 shadow-card md:p-10">
               <h3 className="text-2xl uppercase text-foreground">Scrivimi</h3>
-              <p className="mb-8 mt-2 text-lg text-muted-foreground">
-                Lasciami due righe: ti rispondo personalmente.
-              </p>
+              <p className="mb-8 mt-2 text-lg text-muted-foreground">Lasciami due righe: ti rispondo personalmente.</p>
               <WriteToMe />
             </div>
           </Reveal>
@@ -528,13 +351,7 @@ function Contatti() {
 
 function SocialLink({ href, label, children }: { href: string; label: string; children: ReactNode }) {
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={label}
-      className="flex h-12 w-12 items-center justify-center rounded-full border border-primary/40 text-primary transition-all hover:border-primary hover:shadow-glow"
-    >
+    <a href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className="flex h-12 w-12 items-center justify-center rounded-full border border-primary/40 text-primary transition-all hover:border-primary hover:shadow-glow">
       {children}
     </a>
   );
@@ -543,35 +360,23 @@ function SocialLink({ href, label, children }: { href: string; label: string; ch
 function Footer() {
   return (
     <footer className="border-t border-border bg-midnight pb-28 pt-14 text-center lg:pb-14">
-      <p className="font-script text-4xl text-primary">Alessandro Della Marca</p>
+      <p className="font-script text-4xl text-primary">Alessandro</p>
       <p className="mt-3 font-display text-xs uppercase tracking-[0.35em] text-muted-foreground">
         Sensitivo · Chiaroveggente · Grosseto
       </p>
       <p className="mt-6 text-lg text-muted-foreground">
-        Il primo passo: una chiamata —{" "}
-        <a href={telHref} className="text-primary hover:underline">
-          {CONTACT.phoneDisplay}
-        </a>
+        Il primo passo: una chiamata — <a href={telHref} className="text-primary hover:underline">337 70 92 63</a>
       </p>
-      <p className="mt-8 text-sm text-muted-foreground/70">
-        © {new Date().getFullYear()} Alessandro Della Marca
-      </p>
+      <p className="mt-8 text-sm text-muted-foreground/70">© {new Date().getFullYear()} Alessandro</p>
     </footer>
   );
 }
 
 function MobileBar() {
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-border bg-midnight/90 p-3 backdrop-blur-md lg:hidden">
-      <Button asChild variant="gold" size="lg">
-        <a href={telHref}>
-          <Phone /> Chiama
-        </a>
-      </Button>
-      <Button asChild variant="veil" size="lg">
-        <a href={whatsappHref()} target="_blank" rel="noopener noreferrer">
-          <MessageCircle /> WhatsApp
-        </a>
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-midnight/95 p-3 backdrop-blur-md lg:hidden">
+      <Button asChild variant="gold" size="lg" className="w-full">
+        <a href={telHref}><Phone /> Chiama ora 337 70 92 63</a>
       </Button>
     </div>
   );
