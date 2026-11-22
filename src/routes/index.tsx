@@ -139,8 +139,7 @@ function PrimoPasso() {
           <div className="arcana-frame relative overflow-hidden rounded-lg border border-primary/50 bg-midnight/85 p-5 shadow-glow backdrop-blur-md sm:p-8 md:p-12">
             <div className="grid items-center gap-10 lg:grid-cols-[0.8fr_1.2fr]">
               <img
-                src="/images/quadrato-sator.jpeg" alt="Il teschio del Sator — Vi propongo il primo passo: conoscermi"
-                className="arcana-frame mx-auto w-full max-w-sm rounded-md shadow-card"
+                src="/images/quadrato-sator.jpeg" alt="Il teschio del Sator — Vi propongo il primo passo: conoscermi" className="arcana-frame mx-auto w-full max-w-[220px] sm:max-w-xs md:max-w-sm rounded-md shadow-card"
                 loading="lazy"
               />
               <div className="text-center lg:text-left">

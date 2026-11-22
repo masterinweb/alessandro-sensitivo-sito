@@ -313,3 +313,40 @@ section, header, footer, main, div {
     line-height: 1.6 !important;
   }
 }
+/* Fix definitivo visualizzazione smartphone */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
+@media (max-width: 639px) {
+  .arcana-frame::before,
+  .arcana-frame::after {
+    inset: 0 !important;
+    transform: none !important;
+  }
+
+  h1 {
+    font-size: 1.65rem !important;
+    letter-spacing: 0.05em !important;
+    line-height: 1.2 !important;
+    word-break: break-word;
+  }
+
+  h2 {
+    font-size: 1.38rem !important;
+    letter-spacing: 0.05em !important;
+    line-height: 1.25 !important;
+    word-break: break-word;
+  }
+
+  p, a, li, span {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+}
