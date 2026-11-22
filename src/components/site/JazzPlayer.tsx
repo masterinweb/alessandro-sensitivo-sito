@@ -31,10 +31,14 @@ const PROGRESSIONS: number[][][] = [
 export function JazzPlayer() {
   const [playing, setPlaying] = useState(false);
   const userMutedRef = useRef(false);
+  const runningRef = useRef(false);
   const ctxRef = useRef<AudioContext | null>(null);
   const timerRef = useRef<number | null>(null);
+  const sessionIdRef = useRef(0);
 
   const stopGenerator = useCallback(async () => {
+    sessionIdRef.current += 1;
+    runningRef.current = false;
     if (timerRef.current) {
       window.clearInterval(timerRef.current);
       timerRef.current = null;
@@ -54,6 +58,8 @@ export function JazzPlayer() {
     duration: number,
     velocity: number,
   ) => {
+    if (!Number.isFinite(freq) || freq <= 0) return;
+
     const oscFund = ctx.createOscillator();
     const oscHarm2 = ctx.createOscillator();
     const oscHarm3 = ctx.createOscillator();
@@ -68,21 +74,21 @@ export function JazzPlayer() {
     oscHarm3.frequency.setValueAtTime(freq * 3, when);
 
     const g2 = ctx.createGain();
-    g2.gain.setValueAtTime(0.18, when);
+    g2.gain.setValueAtTime(0.2, when);
     g2.gain.exponentialRampToValueAtTime(0.01, when + duration * 0.6);
 
     const g3 = ctx.createGain();
-    g3.gain.setValueAtTime(0.06, when);
+    g3.gain.setValueAtTime(0.07, when);
     g3.gain.exponentialRampToValueAtTime(0.001, when + duration * 0.35);
 
     const filter = ctx.createBiquadFilter();
     filter.type = "lowpass";
-    filter.frequency.setValueAtTime(1400, when);
-    filter.frequency.exponentialRampToValueAtTime(420, when + duration);
+    filter.frequency.setValueAtTime(1600, when);
+    filter.frequency.exponentialRampToValueAtTime(450, when + duration);
 
     const env = ctx.createGain();
     env.gain.setValueAtTime(0.0001, when);
-    env.gain.linearRampToValueAtTime(velocity, when + 0.035);
+    env.gain.linearRampToValueAtTime(velocity, when + 0.03);
     env.gain.exponentialRampToValueAtTime(0.0001, when + duration);
 
     oscFund.connect(filter);
@@ -103,7 +109,8 @@ export function JazzPlayer() {
   };
 
   const startNewComposition = useCallback(async () => {
-    if (ctxRef.current || userMutedRef.current) return;
+    if (runningRef.current || userMutedRef.current) return;
+    const currentSession = ++sessionIdRef.current;
 
     try {
       const AudioCtx =
@@ -111,6 +118,7 @@ export function JazzPlayer() {
         (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       const ctx = new AudioCtx();
 
+      // Sblocco buffer hardware su iOS Safari e Android Chrome
       const silentBuf = ctx.createBuffer(1, 1, 22050);
       const silentSrc = ctx.createBufferSource();
       silentSrc.buffer = silentBuf;
@@ -120,23 +128,24 @@ export function JazzPlayer() {
       if (ctx.state === "suspended") {
         await ctx.resume();
       }
-      if (ctx.state !== "running") {
+      if (ctx.state !== "running" || currentSession !== sessionIdRef.current) {
         await ctx.close().catch(() => {});
         return;
       }
 
       ctxRef.current = ctx;
+      runningRef.current = true;
 
       const master = ctx.createGain();
-      master.gain.setValueAtTime(0.32, ctx.currentTime);
+      master.gain.setValueAtTime(0.42, ctx.currentTime);
 
       const delay = ctx.createDelay();
       delay.delayTime.setValueAtTime(0.28, ctx.currentTime);
       const feedback = ctx.createGain();
-      feedback.gain.setValueAtTime(0.26, ctx.currentTime);
+      feedback.gain.setValueAtTime(0.28, ctx.currentTime);
       const wetFilter = ctx.createBiquadFilter();
       wetFilter.type = "lowpass";
-      wetFilter.frequency.setValueAtTime(950, ctx.currentTime);
+      wetFilter.frequency.setValueAtTime(1050, ctx.currentTime);
 
       delay.connect(wetFilter);
       wetFilter.connect(feedback);
@@ -149,29 +158,32 @@ export function JazzPlayer() {
         triggerPianoKey(ctx, delay, freq, when, dur, vel * 0.45);
       };
 
+      // Nuova composizione casuale diversa a ogni avvio o riaccensione
       const progression = PROGRESSIONS[Math.floor(Math.random() * PROGRESSIONS.length)];
-      const transpose = [0.94387, 1.0, 1.05946][Math.floor(Math.random() * 3)];
-      const barDurationSec = 4.2 + Math.random() * 0.8;
+      const transpose = [0.8909, 0.94387, 1.0, 1.05946, 1.12246][Math.floor(Math.random() * 5)];
+      const barDurationSec = 3.8 + Math.random() * 0.9;
 
       let barCount = 0;
 
       const composeNextBar = () => {
-        if (!ctxRef.current || ctxRef.current.state !== "running") return;
-        const now = ctx.currentTime + 0.05;
+        if (!ctxRef.current || ctxRef.current.state !== "running" || currentSession !== sessionIdRef.current) return;
+        const now = ctx.currentTime + 0.04;
         const chord = progression[barCount % progression.length].map((f) => f * transpose);
         barCount++;
 
-        playToRoom(chord[0], now, barDurationSec * 0.95, 0.28);
-        playToRoom(chord[1], now + 0.55, barDurationSec * 0.75, 0.17);
-        playToRoom(chord[2], now + 1.1, barDurationSec * 0.65, 0.16);
+        // Mano sinistra: basso + arpeggio caldo (singole frequenze numeriche!)
+        playToRoom(chord[0], now, barDurationSec * 0.95, 0.3);
+        playToRoom(chord[1], now + 0.5, barDurationSec * 0.78, 0.19);
+        playToRoom(chord[2], now + 1.0, barDurationSec * 0.7, 0.18);
 
+        // Mano destra: melodia improvvisata sempre diversa
         const melodySteps = 3 + Math.floor(Math.random() * 3);
         for (let s = 0; s < melodySteps; s++) {
           const noteIdx = 2 + Math.floor(Math.random() * (chord.length - 2));
-          const octave = Math.random() > 0.78 ? 2 : 1;
-          const offset = 0.75 + s * ((barDurationSec - 1.1) / melodySteps) + (Math.random() - 0.5) * 0.15;
-          const vel = 0.15 + Math.random() * 0.08;
-          playToRoom(chord[noteIdx] * octave, now + Math.max(0.2, offset), 2.4 + Math.random() * 1.2, vel);
+          const octave = Math.random() > 0.72 ? 2 : 1;
+          const offset = 0.65 + s * ((barDurationSec - 1.0) / melodySteps) + (Math.random() - 0.5) * 0.12;
+          const vel = 0.18 + Math.random() * 0.09;
+          playToRoom(chord[noteIdx] * octave, now + Math.max(0.15, offset), 2.3 + Math.random() * 1.1, vel);
         }
       };
 
@@ -179,24 +191,24 @@ export function JazzPlayer() {
       timerRef.current = window.setInterval(composeNextBar, Math.round(barDurationSec * 1000));
       setPlaying(true);
     } catch {
-      // Ritenta al prossimo gesto utente
+      runningRef.current = false;
     }
   }, []);
 
   useEffect(() => {
     startNewComposition();
 
-    const unlockMobile = () => {
-      if (!ctxRef.current && !userMutedRef.current) {
+    const unlockOnInteraction = () => {
+      if (!runningRef.current && !userMutedRef.current) {
         startNewComposition();
       }
     };
 
-    const events = ["touchstart", "touchend", "pointerdown", "pointerup", "click", "keydown"];
-    events.forEach((ev) => window.addEventListener(ev, unlockMobile, { capture: true, passive: true }));
+    const events = ["touchstart", "touchend", "pointerdown", "pointerup", "click", "scroll", "keydown"];
+    events.forEach((ev) => window.addEventListener(ev, unlockOnInteraction, { capture: true, passive: true }));
 
     return () => {
-      events.forEach((ev) => window.removeEventListener(ev, unlockMobile, { capture: true }));
+      events.forEach((ev) => window.removeEventListener(ev, unlockOnInteraction, { capture: true }));
       stopGenerator();
     };
   }, [startNewComposition, stopGenerator]);
@@ -216,7 +228,7 @@ export function JazzPlayer() {
       <button
         type="button"
         onClick={handleToggle}
-        aria-label={playing ? "Spegni musica di sottofondo" : "Attiva musica piano bar"}
+        aria-label={playing ? "Spegni musica piano bar" : "Genera nuova musica piano bar"}
         className="flex items-center gap-2 rounded-full border border-primary/60 bg-midnight/95 px-3.5 py-2 font-display text-[11px] uppercase tracking-[0.16em] text-primary shadow-glow backdrop-blur-md transition-opacity hover:opacity-90 sm:text-xs"
       >
         {playing ? (
@@ -227,7 +239,7 @@ export function JazzPlayer() {
         ) : (
           <>
             <Volume2 className="h-4 w-4 text-primary" />
-            <span>Piano Bar</span>
+            <span>Nuovo Brano</span>
           </>
         )}
       </button>
