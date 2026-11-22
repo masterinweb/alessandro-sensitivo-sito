@@ -119,7 +119,7 @@ function Hero() {
               Storico numero attivo da 52 anni
             </p>
             <div className="mt-5">
-              <Button asChild variant="gold" size="xl" className="w-full sm:w-auto">
+              <Button asChild variant="gold" size="lg" className="h-auto w-full max-w-full whitespace-normal px-4 py-4 text-center text-sm sm:w-auto sm:px-8 sm:text-base">
                 <a href={telHref}><Phone /> Chiama ora 337 70 92 63</a>
               </Button>
             </div>
@@ -137,12 +137,12 @@ function PrimoPasso() {
       <div className="relative mx-auto max-w-6xl px-5">
         <Reveal>
           <div className="arcana-frame relative overflow-hidden rounded-lg border border-primary/50 bg-midnight/85 p-5 shadow-glow backdrop-blur-md sm:p-8 md:p-12">
-            <div className="grid items-center gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+            <div className="grid min-w-0 items-center gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-10">
               <img
                 src="/images/quadrato-sator.jpeg" alt="Il teschio del Sator — Vi propongo il primo passo: conoscermi" className="arcana-frame mx-auto w-full max-w-[220px] sm:max-w-xs md:max-w-sm rounded-md shadow-card"
                 loading="lazy"
               />
-              <div className="text-center lg:text-left">
+              <div className="min-w-0 text-center lg:text-left">
                 <p className="font-display text-xs uppercase tracking-[0.18em] sm:tracking-[0.35em] text-primary">Un contatto diretto e sincero</p>
                 <h2 className="mt-4 text-3xl uppercase leading-tight text-foreground md:text-5xl">
                   Vi propongo il primo passo: <span className="text-gold animate-shimmer">conoscermi</span>
@@ -155,7 +155,7 @@ function PrimoPasso() {
                   Basta una semplice telefonata per vivere questa esperienza: affronteremo insieme la tua domanda per darti fin dal primo momento una risposta chiara, rassicurante ed esaustiva.
                 </p>
                 <div className="mt-8">
-                  <Button asChild variant="gold" size="xl">
+                  <Button asChild variant="gold" size="lg" className="h-auto w-full max-w-full whitespace-normal px-4 py-4 text-center text-sm sm:w-auto sm:px-8 sm:text-base">
                     <a href={telHref}><Phone /> Telefona ora · 337 70 92 63</a>
                   </Button>
                 </div>
@@ -297,7 +297,7 @@ function Contatti() {
             Rispondo subito, oppure ti richiamo appena posso al telefono.
           </p>
         </Reveal>
-        <div className="mt-16 grid gap-12 lg:grid-cols-2">
+        <div className="mt-16 grid min-w-0 gap-10 lg:grid-cols-2 lg:gap-12">
           <Reveal>
             <div className="space-y-4">
               {items.map((it) => {
@@ -324,7 +324,7 @@ function Contatti() {
               })}
 
               <div className="pt-4">
-                <Button asChild variant="gold" size="xl" className="w-full">
+                <Button asChild variant="gold" size="lg" className="h-auto w-full max-w-full whitespace-normal px-4 py-4 text-center text-sm sm:px-8 sm:text-base">
                   <a href={telHref}><Phone /> Chiama Alessandro · 337 70 92 63</a>
                 </Button>
               </div>
@@ -337,7 +337,7 @@ function Contatti() {
             </div>
           </Reveal>
           <Reveal delay={150}>
-            <div className="arcana-frame rounded-md bg-card p-8 shadow-card md:p-10">
+            <div className="arcana-frame rounded-md bg-card p-5 shadow-card sm:p-8 md:p-10">
               <h3 className="text-2xl uppercase text-foreground">Scrivimi</h3>
               <p className="mb-8 mt-2 text-lg text-muted-foreground">Lasciami due righe: ti rispondo personalmente.</p>
               <WriteToMe />
