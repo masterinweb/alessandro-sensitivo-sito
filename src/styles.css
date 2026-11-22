@@ -280,3 +280,36 @@
     transform: none;
   }
 }
+
+/* Blocco totale overflow orizzontale su smartphone */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+  position: relative;
+}
+
+section, header, footer, main, div {
+  max-width: 100%;
+}
+
+@media (max-width: 639px) {
+  h1 {
+    font-size: 1.65rem !important;
+    letter-spacing: 0.05em !important;
+    line-height: 1.2 !important;
+  }
+  h2 {
+    font-size: 1.4rem !important;
+    letter-spacing: 0.05em !important;
+    line-height: 1.25 !important;
+  }
+  p, a, li, label {
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+  }
+}
