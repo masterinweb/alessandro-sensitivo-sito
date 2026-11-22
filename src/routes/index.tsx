@@ -231,50 +231,48 @@ function Storia() {
 }
 
 function WarholConsulti() {
-  const tiles = [
-    { h: "CHIAROVEGGENZA", v: "VERITÀ", bg: "bg-emerald-950/80 border-emerald-400/50", accent: "text-emerald-300" },
-    { h: "AMORE", v: "ASCOLTO", bg: "bg-amber-950/70 border-primary/60", accent: "text-primary" },
-    { h: "LAVORO", v: "FUTURO", bg: "bg-indigo-950/80 border-indigo-400/50", accent: "text-indigo-200" },
-    { h: "CHIAREZZA", v: "FIDUCIA", bg: "bg-rose-950/70 border-rose-400/50", accent: "text-rose-200" },
-  ];
-
   return (
-    <section id="consulenze" className="relative scroll-mt-24 bg-night py-24 md:py-32">
-      <div className="mx-auto max-w-6xl px-5">
+    <section id="consulenze" className="relative scroll-mt-24 bg-night py-20 md:py-28">
+      <div className="mx-auto max-w-5xl px-5">
         <Reveal>
-          <div className="mb-14 flex flex-col items-center text-center">
-            <div className="flex h-28 w-28 items-center justify-center rounded-full border border-emerald-400/50 bg-emerald-950/50 shadow-[0_0_45px_rgba(16,185,129,0.3)]">
-              <svg viewBox="0 0 64 64" className="h-16 w-16" aria-label="Stella Verde">
-                <polygon points="32,4 39,23 59,23 43,35 49,55 32,43 15,55 21,35 5,23 25,23" fill="#10B981" stroke="#6EE7B7" strokeWidth="2" />
-              </svg>
-            </div>
-          </div>
+          <figure className="arcana-frame mx-auto overflow-hidden rounded-md shadow-card">
+            <img
+              src="/images/parolechiave.jpeg"
+              onError={(e) => {
+                const img = e.currentTarget;
+                if (!img.dataset.step) {
+                  img.dataset.step = "1";
+                  img.src = "/images/parolechiave.jpg";
+                } else if (img.dataset.step === "1") {
+                  img.dataset.step = "2";
+                  img.src = "/images/parolechiave.png";
+                } else {
+                  img.style.display = "none";
+                }
+              }}
+              alt="Alessandro — Parole chiave del consulto"
+              loading="lazy"
+              className="mx-auto w-full object-contain"
+            />
+          </figure>
         </Reveal>
 
-        <Reveal delay={100}>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {tiles.map((tile) => (
-              <div key={tile.h} className={`relative flex h-64 items-center justify-center overflow-hidden rounded-md border p-6 shadow-card transition-transform duration-500 hover:scale-[1.02] ${tile.bg}`}>
-                <span aria-hidden className="pointer-events-none select-none font-display text-2xl font-bold uppercase tracking-[0.2em] text-foreground/15 sm:text-4xl sm:tracking-[0.25em] [writing-mode:vertical-rl]">
-                  {tile.v}
-                </span>
-                <span className={`absolute inset-x-3 text-center font-display text-lg font-semibold uppercase tracking-[0.16em] sm:text-xl sm:tracking-[0.2em] drop-shadow ${tile.accent}`}>
-                  {tile.h}
-                </span>
-                <span aria-hidden className="pointer-events-none absolute bottom-3 right-4 font-display text-xs uppercase tracking-[0.35em] text-foreground/45">
-                  {tile.v}
-                </span>
-              </div>
-            ))}
-          </div>
-        </Reveal>
-
-        <div className="mt-16 grid gap-10 md:grid-cols-2">
+        <div className="mt-14 grid gap-10 md:grid-cols-2">
           <Reveal>
-            <img src={consultoBlu.url} alt="Ascolto e comprensione profonda" loading="lazy" className="arcana-frame aspect-[4/3] w-full rounded-md object-cover shadow-card" />
+            <img
+              src={consultoBlu.url}
+              alt="Ascolto e comprensione profonda"
+              loading="lazy"
+              className="arcana-frame aspect-[4/3] w-full rounded-md object-cover shadow-card"
+            />
           </Reveal>
           <Reveal delay={120}>
-            <img src={libroRosso.url} alt="Libro con candele accese" loading="lazy" className="arcana-frame aspect-[4/3] w-full rounded-md object-cover shadow-card" />
+            <img
+              src={libroRosso.url}
+              alt="Libro con candele accese"
+              loading="lazy"
+              className="arcana-frame aspect-[4/3] w-full rounded-md object-cover shadow-card"
+            />
           </Reveal>
         </div>
       </div>
