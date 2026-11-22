@@ -287,7 +287,7 @@ function Contatti() {
     { icon: Phone, label: "Telefono · Storico numero da 52 anni", value: "337 70 92 63", href: telHref },
     { icon: Mail, label: "Email", value: CONTACT.email, href: `mailto:${CONTACT.email}` },
     { icon: Globe, label: "Altro sito", value: CONTACT.websiteDisplay, href: CONTACT.website },
-    { icon: MapPin, label: "Sede principale", value: "Grosseto · consulti in tutta Italia", href: undefined },
+    { icon: MapPin, label: "Disponibilità", value: "Consulti in tutta Italia", href: undefined },
   ];
   return (
     <section id="contatti" className="relative scroll-mt-24 py-24 md:py-32">
@@ -363,7 +363,7 @@ function Footer() {
     <footer className="border-t border-border bg-midnight pb-28 pt-14 text-center lg:pb-14">
       <p className="font-script text-4xl text-primary">Alessandro</p>
       <p className="mt-3 font-display text-xs uppercase tracking-[0.35em] text-muted-foreground">
-        Sensitivo · Chiaroveggente · Grosseto
+        Sensitivo · Chiaroveggente · In tutta Italia
       </p>
       <p className="mt-6 text-lg text-muted-foreground">
         Il primo passo: una chiamata — <a href={telHref} className="text-primary hover:underline">337 70 92 63</a>

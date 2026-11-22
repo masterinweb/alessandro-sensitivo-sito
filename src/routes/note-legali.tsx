@@ -32,7 +32,7 @@ function NoteLegali() {
         </div>
         <section className="space-y-3">
           <h2 className="text-xl uppercase text-primary">1. Contatti Ufficiali</h2>
-          <p>Il presente sito web è gestito da <strong>Alessandro Sensitivo</strong>, con sede a Grosseto (Italia).</p>
+          <p>Il presente sito web è gestito da <strong>Alessandro Sensitivo</strong>, operativo in tutta Italia.</p>
           <ul className="list-disc space-y-1 pl-6 text-foreground/85">
             <li><strong>Cellulare ufficiale:</strong> <a href={telHref} className="text-primary hover:underline">337 70 92 63</a></li>
             <li><strong>Email ufficiale:</strong> <a href={`mailto:${CONTACT.email}`} className="text-primary hover:underline">{CONTACT.email}</a></li>

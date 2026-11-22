@@ -32,7 +32,7 @@ function PrivacyPolicy() {
         </div>
         <section className="space-y-3">
           <h2 className="text-xl uppercase text-primary">1. Titolare del Trattamento</h2>
-          <p>Il Titolare del trattamento dei dati personali raccolti tramite questo sito web è <strong>Alessandro Sensitivo</strong>, con sede operativa a Grosseto (Italia).</p>
+          <p>Il Titolare del trattamento dei dati personali raccolti tramite questo sito web è <strong>Alessandro Sensitivo</strong>, operativo in tutta Italia.</p>
           <ul className="list-disc space-y-1 pl-6 text-foreground/85">
             <li><strong>Cellulare:</strong> <a href={telHref} className="text-primary hover:underline">337 70 92 63</a></li>
             <li><strong>Email:</strong> <a href={`mailto:${CONTACT.email}`} className="text-primary hover:underline">{CONTACT.email}</a></li>

@@ -117,15 +117,9 @@ function RootShell({ children }: { children: ReactNode }) {
               "@type": "ProfessionalService",
               name: "Alessandro — Sensitivo e Chiaroveggente",
               description:
-                "Alessandro, sensitivo e chiaroveggente attivo da 52 anni con lo storico numero a sei cifre 337 70 92 63. Consulti da Grosseto e in tutta Italia.",
+                "Alessandro, sensitivo e chiaroveggente attivo da 52 anni con lo storico numero a sei cifre 337 70 92 63. Consulti in tutta Italia.",
               url: "https://vercel.app",
               telephone: "+39337709263",
-              address: {
-                "@type": "PostalAddress",
-                addressLocality: "Grosseto",
-                addressRegion: "GR",
-                addressCountry: "IT",
-              },
               areaServed: "IT",
             }),
           }}
