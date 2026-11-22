@@ -26,7 +26,7 @@ function NoteLegali() {
       </header>
       <main className="mx-auto max-w-4xl space-y-8 px-5 py-16 text-lg leading-relaxed text-foreground/90">
         <div>
-          <p className="font-display text-xs uppercase tracking-[0.3em] text-primary">Informazioni Legali</p>
+          <p className="font-display text-xs uppercase tracking-[0.16em] sm:tracking-[0.3em] text-primary">Informazioni Legali</p>
           <h1 className="mt-2 text-3xl uppercase md:text-5xl">Note Legali</h1>
           <div className="gold-rule mt-4 w-24" />
         </div>

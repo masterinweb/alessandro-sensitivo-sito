@@ -45,7 +45,7 @@ function ChiSonoPage() {
       <main className="mx-auto max-w-5xl px-5 pb-28 pt-28 md:pt-36">
         <Reveal>
           <div className="text-center">
-            <p className="font-display text-xs uppercase tracking-[0.35em] text-primary">
+            <p className="font-display text-xs uppercase tracking-[0.18em] sm:tracking-[0.35em] text-primary">
               Alessandro · Sensitivo e Chiaroveggente
             </p>
             <h1 className="mt-4 text-3xl uppercase leading-tight text-foreground sm:text-4xl md:text-6xl">
@@ -68,7 +68,7 @@ function ChiSonoPage() {
           </Reveal>
 
           <Reveal delay={150}>
-            <div className="arcana-frame space-y-6 rounded-lg border border-primary/40 bg-midnight/80 p-6 text-xl leading-relaxed text-foreground/90 shadow-card backdrop-blur-sm sm:p-8 md:p-12">
+            <div className="arcana-frame space-y-6 rounded-lg border border-primary/40 bg-midnight/80 p-6 text-lg leading-relaxed sm:text-xl text-foreground/90 shadow-card backdrop-blur-sm sm:p-8 md:p-12">
               <p>
                 Mi chiamo <strong className="font-semibold text-primary">Alessandro</strong> e da{" "}
                 <strong className="font-semibold text-foreground">52 anni</strong> esercito

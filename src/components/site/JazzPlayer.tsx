@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Volume2, VolumeX } from "lucide-react";
+import { VolumeX } from "lucide-react";
 
 export function JazzPlayer() {
   const [playing, setPlaying] = useState(false);
-  const [stoppedByUser, setStoppedByUser] = useState(false);
+  const stoppedRef = useRef(false);
   const ctxRef = useRef<AudioContext | null>(null);
   const timerRef = useRef<number | null>(null);
 
@@ -19,7 +19,14 @@ export function JazzPlayer() {
     setPlaying(false);
   }, []);
 
-  const playPianoNote = (ctx: AudioContext, dest: AudioNode, freq: number, startTime: number, duration: number, velocity = 0.11) => {
+  const playPianoNote = (
+    ctx: AudioContext,
+    dest: AudioNode,
+    freq: number,
+    startTime: number,
+    duration: number,
+    velocity = 0.12,
+  ) => {
     const osc1 = ctx.createOscillator();
     const osc2 = ctx.createOscillator();
     const filter = ctx.createBiquadFilter();
@@ -53,22 +60,33 @@ export function JazzPlayer() {
     osc2.stop(startTime + duration + 0.05);
   };
 
-  const startPianoBar = useCallback(async () => {
-    if (ctxRef.current || stoppedByUser) return;
+  const startPianoBar = useCallback(() => {
+    if (ctxRef.current || stoppedRef.current) return;
     try {
-      const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const AudioCtx =
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       const ctx = new AudioCtx();
+
+      // Sblocca subito il buffer hardware su iOS Safari e Android Chrome
+      const unlockBuf = ctx.createBuffer(1, 1, 22050);
+      const unlockSrc = ctx.createBufferSource();
+      unlockSrc.buffer = unlockBuf;
+      unlockSrc.connect(ctx.destination);
+      unlockSrc.start(0);
+
       if (ctx.state === "suspended") {
-        await ctx.resume();
+        ctx.resume().catch(() => {});
       }
+
       if (ctx.state !== "running") {
-        await ctx.close().catch(() => {});
+        ctx.close().catch(() => {});
         return;
       }
 
       ctxRef.current = ctx;
       const master = ctx.createGain();
-      master.gain.setValueAtTime(0.1, ctx.currentTime);
+      master.gain.setValueAtTime(0.11, ctx.currentTime);
       master.connect(ctx.destination);
 
       const measures = [
@@ -85,7 +103,7 @@ export function JazzPlayer() {
         const notes = measures[bar % measures.length];
         bar++;
         notes.forEach((freq, i) => {
-          playPianoNote(ctx, master, freq, now + i * 0.85, 3.6, i === 0 ? 0.13 : 0.09);
+          playPianoNote(ctx, master, freq, now + i * 0.85, 3.6, i === 0 ? 0.14 : 0.095);
         });
       };
 
@@ -93,53 +111,45 @@ export function JazzPlayer() {
       timerRef.current = window.setInterval(playMeasure, 5200);
       setPlaying(true);
     } catch {
-      // Attende la prima interazione utente se bloccato dal browser
+      // Ritenta al prossimo gesto utente
     }
-  }, [stoppedByUser]);
+  }, []);
 
   useEffect(() => {
     startPianoBar();
 
-    const unlockOnFirstTouch = () => {
-      if (!ctxRef.current && !stoppedByUser) {
+    const unlockOnGesture = () => {
+      if (!ctxRef.current && !stoppedRef.current) {
         startPianoBar();
       }
     };
 
-    window.addEventListener("pointerdown", unlockOnFirstTouch, { passive: true });
-    window.addEventListener("touchstart", unlockOnFirstTouch, { passive: true });
-    window.addEventListener("keydown", unlockOnFirstTouch, { passive: true });
+    const events = ["touchend", "pointerup", "click", "keydown"];
+    events.forEach((ev) => window.addEventListener(ev, unlockOnGesture, { capture: true, passive: true }));
 
     return () => {
-      window.removeEventListener("pointerdown", unlockOnFirstTouch);
-      window.removeEventListener("touchstart", unlockOnFirstTouch);
-      window.removeEventListener("keydown", unlockOnFirstTouch);
+      events.forEach((ev) => window.removeEventListener(ev, unlockOnGesture, { capture: true }));
       stopPiano();
     };
-  }, [startPianoBar, stopPiano, stoppedByUser]);
+  }, [startPianoBar, stopPiano]);
 
-  const handleToggle = async () => {
-    if (playing) {
-      setStoppedByUser(true);
-      await stopPiano();
-    } else {
-      setStoppedByUser(false);
-      setTimeout(() => {
-        startPianoBar();
-      }, 50);
-    }
+  const handleStop = async () => {
+    stoppedRef.current = true;
+    await stopPiano();
   };
+
+  if (!playing) return null;
 
   return (
     <div className="fixed bottom-20 right-3 z-40 sm:right-4 lg:bottom-6">
       <button
         type="button"
-        onClick={handleToggle}
-        aria-label={playing ? "Spegni musica di sottofondo" : "Riattiva musica di sottofondo"}
-        className="flex items-center gap-2 rounded-full border border-primary/50 bg-midnight/95 px-3 py-2 font-display text-[11px] uppercase tracking-[0.18em] text-primary shadow-glow backdrop-blur-md transition-opacity hover:opacity-85 sm:px-3.5 sm:text-xs"
+        onClick={handleStop}
+        aria-label="Spegni musica di sottofondo"
+        className="flex items-center gap-2 rounded-full border border-primary/50 bg-midnight/95 px-3.5 py-2 font-display text-[11px] uppercase tracking-[0.16em] text-primary shadow-glow backdrop-blur-md transition-opacity hover:opacity-85 sm:text-xs"
       >
-        {playing ? <Volume2 className="h-4 w-4 text-primary" /> : <VolumeX className="h-4 w-4 text-muted-foreground" />}
-        <span>{playing ? "Spegni Musica" : "Audio Spento"}</span>
+        <VolumeX className="h-4 w-4 text-primary" />
+        <span>Spegni Musica</span>
       </button>
     </div>
   );

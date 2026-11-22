@@ -115,7 +115,7 @@ function Hero() {
             <a href={telHref} aria-label="Chiama lo storico numero 337 70 92 63" className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border-2 border-primary bg-primary/15 text-primary shadow-glow transition-transform duration-300 hover:scale-110">
               <PhoneCall className="h-8 w-8" strokeWidth={1.6} />
             </a>
-            <p className="mt-4 font-display text-xs uppercase tracking-[0.3em] text-primary">
+            <p className="mt-4 font-display text-xs uppercase tracking-[0.16em] sm:tracking-[0.3em] text-primary">
               Storico numero attivo da 52 anni
             </p>
             <div className="mt-5">
@@ -144,15 +144,15 @@ function PrimoPasso() {
                 loading="lazy"
               />
               <div className="text-center lg:text-left">
-                <p className="font-display text-xs uppercase tracking-[0.35em] text-primary">Un contatto diretto e sincero</p>
+                <p className="font-display text-xs uppercase tracking-[0.18em] sm:tracking-[0.35em] text-primary">Un contatto diretto e sincero</p>
                 <h2 className="mt-4 text-3xl uppercase leading-tight text-foreground md:text-5xl">
                   Vi propongo il primo passo: <span className="text-gold animate-shimmer">conoscermi</span>
                 </h2>
                 <div className="gold-rule mx-auto my-6 w-24 lg:mx-0" />
-                <p className="text-xl leading-relaxed text-foreground/95 md:text-2xl md:leading-relaxed">
+                <p className="text-lg leading-relaxed sm:text-xl text-foreground/95 md:text-2xl md:leading-relaxed">
                   Starete bene sin da subito e sentirete immediatamente cosa significa e cosa si prova davvero nel parlare con un sensitivo.
                 </p>
-                <p className="mt-5 text-xl leading-relaxed text-muted-foreground md:text-2xl md:leading-relaxed">
+                <p className="mt-5 text-lg leading-relaxed sm:text-xl text-muted-foreground md:text-2xl md:leading-relaxed">
                   Basta una semplice telefonata per vivere questa esperienza: affronteremo insieme la tua domanda per darti fin dal primo momento una risposta chiara, rassicurante ed esaustiva.
                 </p>
                 <div className="mt-8">
@@ -202,7 +202,7 @@ function Storia() {
           </div>
         </Reveal>
         <Reveal delay={120}>
-          <div className="arcana-frame mt-14 space-y-6 rounded-lg border border-primary/40 bg-midnight/80 p-6 text-xl leading-relaxed text-foreground/90 shadow-card backdrop-blur-sm sm:p-8 md:p-12">
+          <div className="arcana-frame mt-14 space-y-6 rounded-lg border border-primary/40 bg-midnight/80 p-6 text-lg leading-relaxed sm:text-xl text-foreground/90 shadow-card backdrop-blur-sm sm:p-8 md:p-12">
             <p>
               Mi chiamo <strong className="font-semibold text-primary">Alessandro</strong> e da{" "}
               <strong className="font-semibold text-foreground">52 anni</strong> esercito
@@ -362,7 +362,7 @@ function Footer() {
   return (
     <footer className="border-t border-border bg-midnight pb-28 pt-14 text-center lg:pb-14">
       <p className="font-script text-4xl text-primary">Alessandro</p>
-      <p className="mt-3 font-display text-xs uppercase tracking-[0.35em] text-muted-foreground">
+      <p className="mt-3 font-display text-xs uppercase tracking-[0.18em] sm:tracking-[0.35em] text-muted-foreground">
         Sensitivo · Chiaroveggente · In tutta Italia
       </p>
       <p className="mt-6 text-lg text-muted-foreground">
