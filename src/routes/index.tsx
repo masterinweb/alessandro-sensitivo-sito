@@ -36,7 +36,7 @@ export const Route = createFileRoute("/")({
 const NAV = [
   { href: "/chi-sono", label: "Chi sono", isRoute: true },
   { href: "#primo-passo", label: "Il primo passo" },
-  { href: "#storia", label: "Chi è Alessandro" },
+  { href: "#chi-sono", label: "Chi sono" },
   { href: "#consulenze", label: "Consulti" },
   { href: "#contatti", label: "Contatti" },
 ];
@@ -185,45 +185,44 @@ function FigureScorrimento() {
     </section>
   );
 }
-const TIMELINE = [
-  {
-    era: "La scelta",
-    title: "Lontano dal mondo finto",
-    text: "Assaporata la finzione dello spettacolo, decide di lasciarlo per dedicarsi davvero ai suoi cari. E per lui sono cari tutti: amici, clienti, chiunque bussi alla sua porta.",
-  },
-  {
-    era: "Oggi",
-    title: "Ascolto autentico in tutta Italia",
-    text: "Dalla sede di Grosseto segue persone in tutta Italia con serietà, riservatezza e lo stesso numero storico attivo da 52 anni.",
-  },
-];
-
 function Storia() {
   return (
-    <section id="storia" className="relative scroll-mt-24 py-24 md:py-32">
+    <section id="chi-sono" className="relative scroll-mt-24 py-24 md:py-32">
       <div className="mx-auto max-w-4xl px-5">
         <Reveal>
           <div className="text-center">
-            <h2 className="text-3xl uppercase text-foreground md:text-5xl">
-              Chi è <span className="text-gold">Alessandro</span>
+            <h2 className="text-3xl uppercase text-foreground sm:text-4xl md:text-5xl">
+              Chi <span className="text-gold">sono</span>
             </h2>
             <div className="gold-rule mx-auto mt-6 w-24" />
           </div>
         </Reveal>
-        <ol className="relative mt-16 space-y-14 border-l border-primary/30 pl-10">
-          {TIMELINE.map((t, i) => (
-            <Reveal key={t.title} delay={i * 100}>
-              <li className="relative">
-                <span className="absolute -left-[2.85rem] top-1 flex h-5 w-5 items-center justify-center rounded-full border border-primary bg-background shadow-glow">
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                </span>
-                <p className="font-display text-xs uppercase tracking-[0.35em] text-primary">{t.era}</p>
-                <h3 className="mt-2 text-2xl uppercase text-foreground md:text-3xl">{t.title}</h3>
-                <p className="mt-4 text-xl leading-relaxed text-muted-foreground">{t.text}</p>
-              </li>
-            </Reveal>
-          ))}
-        </ol>
+        <Reveal delay={120}>
+          <div className="arcana-frame mt-14 space-y-6 rounded-lg border border-primary/40 bg-midnight/80 p-6 text-xl leading-relaxed text-foreground/90 shadow-card backdrop-blur-sm sm:p-8 md:p-12">
+            <p>
+              Mi chiamo <strong className="font-semibold text-primary">Alessandro</strong> e da{" "}
+              <strong className="font-semibold text-foreground">52 anni</strong> esercito
+              l&apos;attività di sensitivo e chiaroveggente con serietà, riservatezza e rispetto
+              per chi si rivolge a me.
+            </p>
+            <p>
+              Oltre mezzo secolo di esperienza sul campo significa aver ascoltato migliaia di
+              storie, affrontato ogni tipo di situazione e affinato un metodo basato sulla
+              chiarezza, senza illusioni né false promesse. Il mio obiettivo è offrire un punto di
+              vista lucido e sincero per aiutarti a fare ordine nei momenti di dubbio o
+              difficoltà.
+            </p>
+            <p>
+              Il mio recapito telefonico — lo storico{" "}
+              <a href={telHref} className="font-semibold text-primary hover:underline">
+                337 70 92 63
+              </a>{" "}
+              a sei cifre — è rimasto invariato in tutti questi 52 anni: una scelta di trasparenza
+              e continuità che testimonia la mia presenza costante e la fiducia costruita nel
+              tempo con chi mi consulta.
+            </p>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
