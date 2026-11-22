@@ -112,7 +112,7 @@ function Hero() {
           <div className="mt-5 flex items-center justify-center gap-3">
             <span className="gold-rule hidden w-12 sm:block" />
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/50 bg-midnight/85 px-4 py-1.5 font-display text-xs uppercase tracking-[0.2em] text-gold shadow-glow backdrop-blur-md animate-shimmer sm:px-6 sm:py-2 sm:text-sm sm:tracking-[0.28em]">
-              ✦ Percezioni Extrasensoriali ✦
+              ✦ Percezioni Sensoriali ✦
             </span>
             <span className="gold-rule hidden w-12 sm:block" />
           </div>

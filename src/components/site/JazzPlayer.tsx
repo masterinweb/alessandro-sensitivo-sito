@@ -1,30 +1,25 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 
-// Progressioni armoniche Piano Bar Jazz/Lounge (frequenze Hz)
 const PROGRESSIONS: number[][][] = [
-  // Progressione 1: Notturno in Do Major7 -> La min9 -> Re min9 -> Sol13
   [
     [130.81, 196.0, 246.94, 329.63, 392.0, 493.88],
     [110.0, 164.81, 220.0, 261.63, 329.63, 493.88],
     [146.83, 220.0, 261.63, 329.63, 392.0, 523.25],
     [98.0, 174.61, 220.0, 246.94, 329.63, 440.0],
   ],
-  // Progressione 2: Ballata in Fa Major7 -> Re min7 -> Sib Major7 -> Do9sus4
   [
     [174.61, 220.0, 261.63, 329.63, 440.0, 523.25],
     [146.83, 220.0, 261.63, 349.23, 440.0, 523.25],
     [116.54, 174.61, 220.0, 293.66, 349.23, 440.0],
     [130.81, 196.0, 233.08, 293.66, 349.23, 466.16],
   ],
-  // Progressione 3: Atmosfera Parigi in Mi min9 -> La min9 -> Re9 -> Sol Major7
   [
     [164.81, 246.94, 293.66, 369.99, 493.88, 587.33],
     [110.0, 196.0, 246.94, 329.63, 392.0, 493.88],
     [146.83, 220.0, 261.63, 329.63, 392.0, 523.25],
     [196.0, 246.94, 293.66, 369.99, 440.0, 587.33],
   ],
-  // Progressione 4: Sogno d'Oro in Mib Major7 -> Do min9 -> Fa min9 -> Sib13
   [
     [155.56, 233.08, 293.66, 392.0, 466.16, 587.33],
     [130.81, 196.0, 233.08, 293.66, 392.0, 466.16],
@@ -35,7 +30,6 @@ const PROGRESSIONS: number[][][] = [
 
 export function JazzPlayer() {
   const [playing, setPlaying] = useState(false);
-  const [userMuted, setUserMuted] = useState(false);
   const userMutedRef = useRef(false);
   const ctxRef = useRef<AudioContext | null>(null);
   const timerRef = useRef<number | null>(null);
@@ -52,7 +46,6 @@ export function JazzPlayer() {
     setPlaying(false);
   }, []);
 
-  // Sintesi pianoforte caldo con armonici, martelletto morbido e riverbero di sala
   const triggerPianoKey = (
     ctx: AudioContext,
     dest: AudioNode,
@@ -118,7 +111,6 @@ export function JazzPlayer() {
         (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       const ctx = new AudioCtx();
 
-      // Sblocco immediato per iOS Safari e Android Chrome
       const silentBuf = ctx.createBuffer(1, 1, 22050);
       const silentSrc = ctx.createBufferSource();
       silentSrc.buffer = silentBuf;
@@ -135,7 +127,6 @@ export function JazzPlayer() {
 
       ctxRef.current = ctx;
 
-      // Master + eco stereo morbido effetto sala Piano Bar
       const master = ctx.createGain();
       master.gain.setValueAtTime(0.32, ctx.currentTime);
 
@@ -158,10 +149,9 @@ export function JazzPlayer() {
         triggerPianoKey(ctx, delay, freq, when, dur, vel * 0.45);
       };
 
-      // Sceglie una progressione casuale e un tempo diverso a ogni avvio/riaccensione
       const progression = PROGRESSIONS[Math.floor(Math.random() * PROGRESSIONS.length)];
-      const transpose = [0.94387, 1.0, 1.05946][Math.floor(Math.random() * 3)]; // Tonalità diversa ogni volta
-      const barDurationSec = 4.2 + Math.random() * 0.8; // Tempo leggermente diverso ogni volta
+      const transpose = [0.94387, 1.0, 1.05946][Math.floor(Math.random() * 3)];
+      const barDurationSec = 4.2 + Math.random() * 0.8;
 
       let barCount = 0;
 
@@ -171,13 +161,11 @@ export function JazzPlayer() {
         const chord = progression[barCount % progression.length].map((f) => f * transpose);
         barCount++;
 
-        // Mano sinistra: basso profondo + accordo arpeggiato morbido
         playToRoom(chord[0], now, barDurationSec * 0.95, 0.28);
         playToRoom(chord[1], now + 0.55, barDurationSec * 0.75, 0.17);
         playToRoom(chord[2], now + 1.1, barDurationSec * 0.65, 0.16);
 
-        // Mano destra: improvvisazione melodica sempre diversa
-        const melodySteps = 3 + Math.floor(Math.random() * 3); // 3 a 5 note melodiche per battuta
+        const melodySteps = 3 + Math.floor(Math.random() * 3);
         for (let s = 0; s < melodySteps; s++) {
           const noteIdx = 2 + Math.floor(Math.random() * (chord.length - 2));
           const octave = Math.random() > 0.78 ? 2 : 1;
@@ -191,7 +179,7 @@ export function JazzPlayer() {
       timerRef.current = window.setInterval(composeNextBar, Math.round(barDurationSec * 1000));
       setPlaying(true);
     } catch {
-      // Ritenta al prossimo gesto dell'utente
+      // Ritenta al prossimo gesto utente
     }
   }, []);
 
@@ -216,24 +204,20 @@ export function JazzPlayer() {
   const handleToggle = async () => {
     if (playing) {
       userMutedRef.current = true;
-      setUserMuted(true);
       await stopGenerator();
     } else {
       userMutedRef.current = false;
-      setUserMuted(false);
       await startNewComposition();
     }
   };
 
-  if (!playing && !userMuted) return null;
-
   return (
-    <div className="fixed bottom-24 right-3 z-40 sm:right-4 lg:bottom-6">
+    <div className="fixed bottom-24 right-3 z-50 sm:right-4 lg:bottom-6">
       <button
         type="button"
         onClick={handleToggle}
-        aria-label={playing ? "Spegni musica di sottofondo" : "Genera nuova musica piano bar"}
-        className="flex items-center gap-2 rounded-full border border-primary/50 bg-midnight/95 px-3.5 py-2 font-display text-[11px] uppercase tracking-[0.16em] text-primary shadow-glow backdrop-blur-md transition-opacity hover:opacity-85 sm:text-xs"
+        aria-label={playing ? "Spegni musica di sottofondo" : "Attiva musica piano bar"}
+        className="flex items-center gap-2 rounded-full border border-primary/60 bg-midnight/95 px-3.5 py-2 font-display text-[11px] uppercase tracking-[0.16em] text-primary shadow-glow backdrop-blur-md transition-opacity hover:opacity-90 sm:text-xs"
       >
         {playing ? (
           <>
@@ -243,7 +227,7 @@ export function JazzPlayer() {
         ) : (
           <>
             <Volume2 className="h-4 w-4 text-primary" />
-            <span>Nuovo Brano</span>
+            <span>Piano Bar</span>
           </>
         )}
       </button>
