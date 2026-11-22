@@ -7,6 +7,7 @@ import { Reveal } from "@/components/site/Reveal";
 import { SectionTitle } from "@/components/site/SectionTitle";
 import { WriteToMe } from "@/components/site/WriteToMe";
 import { JazzPlayer } from "@/components/site/JazzPlayer";
+import { CookieBanner } from "@/components/site/CookieBanner";
 import { CONTACT, telHref } from "@/lib/contact";
 
 import consultoBlu from "@/assets/consulto-tramonto.jpeg.asset.json";
@@ -53,6 +54,7 @@ function Index() {
       <Contatti />
       <Footer />
       <JazzPlayer />
+      <CookieBanner />
       <MobileBar />
     </div>
   );
@@ -366,7 +368,12 @@ function Footer() {
       <p className="mt-6 text-lg text-muted-foreground">
         Il primo passo: una chiamata — <a href={telHref} className="text-primary hover:underline">337 70 92 63</a>
       </p>
-      <p className="mt-8 text-sm text-muted-foreground/70">© {new Date().getFullYear()} Alessandro</p>
+      <div className="mt-8 flex flex-wrap items-center justify-center gap-6 font-display text-xs uppercase tracking-[0.2em] text-muted-foreground">
+        <Link to="/privacy-policy" className="transition-colors hover:text-primary">Privacy Policy</Link>
+        <Link to="/cookie-policy" className="transition-colors hover:text-primary">Cookie Policy</Link>
+        <Link to="/note-legali" className="transition-colors hover:text-primary">Note Legali</Link>
+      </div>
+      <p className="mt-6 text-sm text-muted-foreground/70">© {new Date().getFullYear()} Alessandro Sensitivo · Cell. 337 70 92 63</p>
     </footer>
   );
 }

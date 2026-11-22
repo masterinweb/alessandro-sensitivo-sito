@@ -1,74 +1,47 @@
 import { useState, type FormEvent } from "react";
-import { MessageCircle } from "lucide-react";
+import { CheckCircle2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { composeMessage, whatsappHref } from "@/lib/contact";
-import { cn } from "@/lib/utils";
-
-const TOPICS = ["Amore", "Lavoro", "Famiglia", "Protezione", "Altro"] as const;
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { CONTACT } from "@/lib/contact";
 
 export function WriteToMe() {
   const [name, setName] = useState("");
-  const [topic, setTopic] = useState<string>("Amore");
+  const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
+  const [sent, setSent] = useState(false);
 
-  const onSubmit = (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    window.open(whatsappHref(composeMessage({ name, topic, message })), "_blank", "noopener");
+    const subject = encodeURIComponent(`Richiesta consulto dal sito — ${name || "Visitatore"}`);
+    const body = encodeURIComponent(`Nome: ${name}\nTelefono: ${phone}\n\nMessaggio:\n${message}`);
+    window.location.href = `mailto:${CONTACT.email}?subject=${subject}&body=${body}`;
+    setSent(true);
   };
 
-  const field =
-    "w-full rounded-sm border border-input bg-midnight/60 px-4 py-3 text-lg text-foreground placeholder:text-muted-foreground/70 focus:border-primary focus:outline-none focus:ring-1 focus:ring-ring";
-
   return (
-    <form onSubmit={onSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="nome" className="mb-2 block font-display text-xs uppercase tracking-[0.25em] text-primary">
-          Il tuo nome
-        </label>
-        <input id="nome" value={name} onChange={(e) => setName(e.target.value)} placeholder="Come ti chiami?" className={field} />
+        <label className="mb-1.5 block font-display text-xs uppercase tracking-[0.2em] text-muted-foreground">Il tuo nome</label>
+        <Input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Come ti chiami?" className="border-border bg-background/70" />
       </div>
       <div>
-        <span className="mb-2 block font-display text-xs uppercase tracking-[0.25em] text-primary">
-          Di cosa vuoi parlare
-        </span>
-        <div className="flex flex-wrap gap-2">
-          {TOPICS.map((t) => (
-            <button
-              key={t}
-              type="button"
-              onClick={() => setTopic(t)}
-              aria-pressed={topic === t}
-              className={cn(
-                "rounded-full border px-4 py-1.5 text-base transition-colors",
-                topic === t
-                  ? "border-primary bg-primary/15 text-primary"
-                  : "border-border text-muted-foreground hover:border-primary/60 hover:text-foreground",
-              )}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
+        <label className="mb-1.5 block font-display text-xs uppercase tracking-[0.2em] text-muted-foreground">Il tuo numero di telefono</label>
+        <Input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Per essere richiamato" className="border-border bg-background/70" />
       </div>
       <div>
-        <label htmlFor="messaggio" className="mb-2 block font-display text-xs uppercase tracking-[0.25em] text-primary">
-          Il tuo messaggio
-        </label>
-        <textarea
-          id="messaggio"
-          rows={4}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="Raccontami in poche parole cosa senti…"
-          className={cn(field, "resize-none")}
-        />
+        <label className="mb-1.5 block font-display text-xs uppercase tracking-[0.2em] text-muted-foreground">La tua domanda</label>
+        <Textarea required rows={4} value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Scrivi qui liberamente..." className="border-border bg-background/70" />
       </div>
-      <Button type="submit" variant="gold" size="xl" className="w-full">
-        <MessageCircle /> Invia su WhatsApp
+      <Button type="submit" variant="gold" size="lg" className="w-full">
+        <Send /> Invia messaggio ad Alessandro
       </Button>
-      <p className="text-center text-base text-muted-foreground">
-        Il messaggio si apre in WhatsApp, pronto da inviare ad Alessandro.
-      </p>
+      {sent && (
+        <p className="flex items-center gap-2 pt-2 text-sm text-primary">
+          <CheckCircle2 className="h-4 w-4 shrink-0" />
+          Si sta aprendo la tua app email per inviare il messaggio direttamente ad Alessandro.
+        </p>
+      )}
     </form>
   );
 }
