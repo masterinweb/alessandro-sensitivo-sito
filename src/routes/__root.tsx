@@ -107,9 +107,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="it">
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-        <HeadContent />
+      <head>        <HeadContent />
               <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
