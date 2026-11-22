@@ -9,7 +9,7 @@ import ritratto from "@/assets/alessandro-ritratto.jpg.asset.json";
 
 const TITLE = "Chi sono — Alessandro · Sensitivo e Chiaroveggente";
 const DESCRIPTION =
-  "La storia reale di Alessandro: lontano dal mondo finto dello spettacolo, oggi segue persone in tutta Italia dalla sede di Grosseto con lo stesso numero storico attivo da 52 anni.";
+  "Mi chiamo Alessandro e da 52 anni esercito l'attività di sensitivo e chiaroveggente con serietà, riservatezza e rispetto per chi si rivolge a me.";
 
 export const Route = createFileRoute("/chi-sono")({
   head: () => ({
@@ -68,35 +68,31 @@ function ChiSonoPage() {
           </Reveal>
 
           <Reveal delay={150}>
-            <div className="arcana-frame space-y-10 rounded-lg border border-primary/40 bg-midnight/80 p-6 shadow-card backdrop-blur-sm sm:p-8 md:p-12">
-              <div>
-                <p className="font-display text-xs uppercase tracking-[0.35em] text-primary">
-                  La scelta
-                </p>
-                <h2 className="mt-2 text-2xl uppercase text-foreground md:text-3xl">
-                  Lontano dal mondo finto
-                </h2>
-                <p className="mt-4 text-xl leading-relaxed text-foreground/90">
-                  Assaporata la finzione dello spettacolo, decide di lasciarlo per dedicarsi davvero
-                  ai suoi cari. E per lui sono cari tutti: amici, clienti, chiunque bussi alla sua
-                  porta.
-                </p>
-              </div>
+            <div className="arcana-frame space-y-6 rounded-lg border border-primary/40 bg-midnight/80 p-6 text-xl leading-relaxed text-foreground/90 shadow-card backdrop-blur-sm sm:p-8 md:p-12">
+              <p>
+                Mi chiamo <strong className="font-semibold text-primary">Alessandro</strong> e da{" "}
+                <strong className="font-semibold text-foreground">52 anni</strong> esercito
+                l&apos;attività di sensitivo e chiaroveggente con serietà, riservatezza e rispetto
+                per chi si rivolge a me.
+              </p>
 
-              <div className="gold-rule w-20" />
+              <p>
+                Oltre mezzo secolo di esperienza sul campo significa aver ascoltato migliaia di
+                storie, affrontato ogni tipo di situazione e affinato un metodo basato sulla
+                chiarezza, senza illusioni né false promesse. Il mio obiettivo è offrire un punto di
+                vista lucido e sincero per aiutarti a fare ordine nei momenti di dubbio o
+                difficoltà.
+              </p>
 
-              <div>
-                <p className="font-display text-xs uppercase tracking-[0.35em] text-primary">
-                  Oggi
-                </p>
-                <h2 className="mt-2 text-2xl uppercase text-foreground md:text-3xl">
-                  Ascolto autentico in tutta Italia
-                </h2>
-                <p className="mt-4 text-xl leading-relaxed text-foreground/90">
-                  Dalla sede di Grosseto segue persone in tutta Italia con serietà, riservatezza e
-                  lo stesso numero storico attivo da 52 anni.
-                </p>
-              </div>
+              <p>
+                Il mio recapito telefonico — lo storico{" "}
+                <a href={telHref} className="font-semibold text-primary hover:underline">
+                  337 70 92 63
+                </a>{" "}
+                a sei cifre — è rimasto invariato in tutti questi 52 anni: una scelta di trasparenza
+                e continuità che testimonia la mia presenza costante e la fiducia costruita nel
+                tempo con chi mi consulta.
+              </p>
 
               <div className="pt-4">
                 <Button asChild variant="gold" size="xl" className="w-full sm:w-auto">
