@@ -4,6 +4,7 @@ import { VolumeX } from "lucide-react";
 export function JazzPlayer() {
   const [playing, setPlaying] = useState(false);
   const stoppedRef = useRef(false);
+  const startingRef = useRef(false);
   const ctxRef = useRef<AudioContext | null>(null);
   const timerRef = useRef<number | null>(null);
 
@@ -16,6 +17,7 @@ export function JazzPlayer() {
       await ctxRef.current.close().catch(() => {});
       ctxRef.current = null;
     }
+    startingRef.current = false;
     setPlaying(false);
   }, []);
 
@@ -25,7 +27,7 @@ export function JazzPlayer() {
     freq: number,
     startTime: number,
     duration: number,
-    velocity = 0.12,
+    velocity = 0.13,
   ) => {
     const osc1 = ctx.createOscillator();
     const osc2 = ctx.createOscillator();
@@ -60,15 +62,17 @@ export function JazzPlayer() {
     osc2.stop(startTime + duration + 0.05);
   };
 
-  const startPianoBar = useCallback(() => {
-    if (ctxRef.current || stoppedRef.current) return;
+  const startPianoBar = useCallback(async () => {
+    if (ctxRef.current || stoppedRef.current || startingRef.current) return;
+    startingRef.current = true;
+
     try {
       const AudioCtx =
         window.AudioContext ||
         (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       const ctx = new AudioCtx();
 
-      // Sblocca subito il buffer hardware su iOS Safari e Android Chrome
+      // Sblocco buffer silenzioso per iOS Safari
       const unlockBuf = ctx.createBuffer(1, 1, 22050);
       const unlockSrc = ctx.createBufferSource();
       unlockSrc.buffer = unlockBuf;
@@ -76,17 +80,18 @@ export function JazzPlayer() {
       unlockSrc.start(0);
 
       if (ctx.state === "suspended") {
-        ctx.resume().catch(() => {});
+        await ctx.resume();
       }
 
       if (ctx.state !== "running") {
-        ctx.close().catch(() => {});
+        await ctx.close().catch(() => {});
+        startingRef.current = false;
         return;
       }
 
       ctxRef.current = ctx;
       const master = ctx.createGain();
-      master.gain.setValueAtTime(0.11, ctx.currentTime);
+      master.gain.setValueAtTime(0.12, ctx.currentTime);
       master.connect(ctx.destination);
 
       const measures = [
@@ -103,7 +108,7 @@ export function JazzPlayer() {
         const notes = measures[bar % measures.length];
         bar++;
         notes.forEach((freq, i) => {
-          playPianoNote(ctx, master, freq, now + i * 0.85, 3.6, i === 0 ? 0.14 : 0.095);
+          playPianoNote(ctx, master, freq, now + i * 0.85, 3.6, i === 0 ? 0.14 : 0.1);
         });
       };
 
@@ -111,24 +116,24 @@ export function JazzPlayer() {
       timerRef.current = window.setInterval(playMeasure, 5200);
       setPlaying(true);
     } catch {
-      // Ritenta al prossimo gesto utente
+      startingRef.current = false;
     }
   }, []);
 
   useEffect(() => {
     startPianoBar();
 
-    const unlockOnGesture = () => {
+    const unlockOnTouch = () => {
       if (!ctxRef.current && !stoppedRef.current) {
         startPianoBar();
       }
     };
 
-    const events = ["touchend", "pointerup", "click", "keydown"];
-    events.forEach((ev) => window.addEventListener(ev, unlockOnGesture, { capture: true, passive: true }));
+    const events = ["touchstart", "touchend", "pointerdown", "pointerup", "click", "keydown"];
+    events.forEach((ev) => window.addEventListener(ev, unlockOnTouch, { capture: true, passive: true }));
 
     return () => {
-      events.forEach((ev) => window.removeEventListener(ev, unlockOnGesture, { capture: true }));
+      events.forEach((ev) => window.removeEventListener(ev, unlockOnTouch, { capture: true }));
       stopPiano();
     };
   }, [startPianoBar, stopPiano]);
