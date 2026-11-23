@@ -30,21 +30,18 @@ const PROGRESSIONS: number[][][] = [
 
 export function JazzPlayer() {
   const [playing, setPlaying] = useState(false);
-  const userMutedRef = useRef(false);
-  const runningRef = useRef(false);
+  const [userStopped, setUserStopped] = useState(false);
+  const userStoppedRef = useRef(false);
   const ctxRef = useRef<AudioContext | null>(null);
   const timerRef = useRef<number | null>(null);
-  const sessionIdRef = useRef(0);
 
-  const stopGenerator = useCallback(async () => {
-    sessionIdRef.current += 1;
-    runningRef.current = false;
-    if (timerRef.current) {
+  const stopGenerator = useCallback(() => {
+    if (timerRef.current !== null) {
       window.clearInterval(timerRef.current);
       timerRef.current = null;
     }
     if (ctxRef.current) {
-      await ctxRef.current.close().catch(() => {});
+      ctxRef.current.close().catch(() => {});
       ctxRef.current = null;
     }
     setPlaying(false);
@@ -108,32 +105,39 @@ export function JazzPlayer() {
     oscHarm3.stop(when + duration + 0.08);
   };
 
-  const startNewComposition = useCallback(async () => {
-    if (runningRef.current || userMutedRef.current) return;
-    const currentSession = ++sessionIdRef.current;
+  // Avvio 100% sincrono: indispensabile per Safari iOS e Chrome Android/Desktop
+  const startSyncComposition = useCallback(() => {
+    if (userStoppedRef.current) return;
 
     try {
-      const AudioCtx =
-        window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      const ctx = new AudioCtx();
+      let ctx = ctxRef.current;
+      if (!ctx) {
+        const AudioCtx =
+          window.AudioContext ||
+          (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        ctx = new AudioCtx();
+        ctxRef.current = ctx;
 
-      const silentBuf = ctx.createBuffer(1, 1, 22050);
-      const silentSrc = ctx.createBufferSource();
-      silentSrc.buffer = silentBuf;
-      silentSrc.connect(ctx.destination);
-      silentSrc.start(0);
+        // Sblocco buffer sincrono per iOS
+        const silentBuf = ctx.createBuffer(1, 1, 22050);
+        const silentSrc = ctx.createBufferSource();
+        silentSrc.buffer = silentBuf;
+        silentSrc.connect(ctx.destination);
+        silentSrc.start(0);
+      }
 
       if (ctx.state === "suspended") {
-        await ctx.resume();
+        ctx.resume().catch(() => {});
       }
-      if (ctx.state !== "running" || currentSession !== sessionIdRef.current) {
-        await ctx.close().catch(() => {});
+
+      if (ctx.state !== "running") {
         return;
       }
 
-      ctxRef.current = ctx;
-      runningRef.current = true;
+      if (timerRef.current !== null) {
+        setPlaying(true);
+        return;
+      }
 
       const master = ctx.createGain();
       master.gain.setValueAtTime(0.45, ctx.currentTime);
@@ -153,20 +157,20 @@ export function JazzPlayer() {
       master.connect(ctx.destination);
 
       const playToRoom = (freq: number | undefined, when: number, dur: number, vel: number) => {
-        triggerPianoKey(ctx, master, freq, when, dur, vel);
-        triggerPianoKey(ctx, delay, freq, when, dur, vel * 0.45);
+        triggerPianoKey(ctx!, master, freq, when, dur, vel);
+        triggerPianoKey(ctx!, delay, freq, when, dur, vel * 0.45);
       };
 
-      const progression = PROGRESSIONS[Math.floor(Math.random() * PROGRESSIONS.length)];
-      const transpose = [0.8909, 0.94387, 1.0, 1.05946, 1.12246][Math.floor(Math.random() * 5)];
+      const progression = PROGRESSIONS.at(Math.floor(Math.random() * PROGRESSIONS.length))!;
+      const transpose = [0.8909, 0.94387, 1.0, 1.05946, 1.12246].at(Math.floor(Math.random() * 5)) ?? 1.0;
       const barDurationSec = 3.8 + Math.random() * 0.9;
-
       let barCount = 0;
 
       const composeNextBar = () => {
-        if (!ctxRef.current || ctxRef.current.state !== "running" || currentSession !== sessionIdRef.current) return;
-        const now = ctx.currentTime + 0.04;
-        const chord = progression[barCount % progression.length].map((f) => f * transpose);
+        if (!ctxRef.current || ctxRef.current.state !== "running") return;
+        const now = ctxRef.current.currentTime + 0.04;
+        const rawChord = progression.at(barCount % progression.length)!;
+        const chord = rawChord.map((f) => f * transpose);
         barCount++;
 
         playToRoom(chord.at(0), now, barDurationSec * 0.95, 0.32);
@@ -190,35 +194,39 @@ export function JazzPlayer() {
       timerRef.current = window.setInterval(composeNextBar, Math.round(barDurationSec * 1000));
       setPlaying(true);
     } catch {
-      runningRef.current = false;
+      // Ritenta al gesto successivo
     }
   }, []);
 
   useEffect(() => {
-    startNewComposition();
+    // Prova subito al caricamento
+    startSyncComposition();
 
-    const unlockOnInteraction = () => {
-      if (!runningRef.current && !userMutedRef.current) {
-        startNewComposition();
+    // Se il browser blocca l'autoplay senza gesto, sblocca al primissimo tap/click/tasto
+    const onGesture = () => {
+      if (!userStoppedRef.current && timerRef.current === null) {
+        startSyncComposition();
       }
     };
 
-    const events = ["touchstart", "touchend", "pointerdown", "pointerup", "click", "scroll", "keydown"];
-    events.forEach((ev) => window.addEventListener(ev, unlockOnInteraction, { capture: true, passive: true }));
+    const events = ["pointerdown", "touchend", "click", "keydown"];
+    events.forEach((ev) => window.addEventListener(ev, onGesture, { capture: true, passive: true }));
 
     return () => {
-      events.forEach((ev) => window.removeEventListener(ev, unlockOnInteraction, { capture: true }));
+      events.forEach((ev) => window.removeEventListener(ev, onGesture, { capture: true }));
       stopGenerator();
     };
-  }, [startNewComposition, stopGenerator]);
+  }, [startSyncComposition, stopGenerator]);
 
-  const handleToggle = async () => {
+  const handleToggle = () => {
     if (playing) {
-      userMutedRef.current = true;
-      await stopGenerator();
+      userStoppedRef.current = true;
+      setUserStopped(true);
+      stopGenerator();
     } else {
-      userMutedRef.current = false;
-      await startNewComposition();
+      userStoppedRef.current = false;
+      setUserStopped(false);
+      startSyncComposition();
     }
   };
 
@@ -228,7 +236,7 @@ export function JazzPlayer() {
         type="button"
         onClick={handleToggle}
         aria-label={playing ? "Spegni musica piano bar" : "Genera nuova musica piano bar"}
-        className="flex items-center gap-2 rounded-full border border-primary/60 bg-midnight/95 px-3.5 py-2 font-display text-[11px] uppercase tracking-[0.16em] text-primary shadow-glow backdrop-blur-md transition-opacity hover:opacity-90 sm:text-xs"
+        className="flex items-center gap-2 rounded-full border border-primary/70 bg-midnight/95 px-3.5 py-2 font-display text-[11px] uppercase tracking-[0.16em] text-primary shadow-glow backdrop-blur-md transition-opacity hover:opacity-90 sm:text-xs"
       >
         {playing ? (
           <>
@@ -237,8 +245,8 @@ export function JazzPlayer() {
           </>
         ) : (
           <>
-            <Volume2 className="h-4 w-4 text-primary" />
-            <span>Nuovo Brano</span>
+            <Volume2 className="h-4 w-4 animate-pulse text-primary" />
+            <span>{userStopped ? "Nuovo Brano" : "Attiva Piano Bar"}</span>
           </>
         )}
       </button>
