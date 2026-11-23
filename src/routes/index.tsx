@@ -299,7 +299,7 @@ function Contatti() {
     <section id="contatti" className="relative scroll-mt-24 py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-5">
         <Reveal>
-          <SectionTitle kicker="Mettiti in contatto" title="Alessandro ti risponde" />
+          <SectionTitle kicker="Mettiti in contatto" title="Contatti" />
           <p className="mx-auto mt-8 max-w-2xl text-center text-xl text-muted-foreground">
             Rispondo subito, oppure ti richiamo appena posso al telefono.
           </p>

@@ -53,12 +53,12 @@ export function JazzPlayer() {
   const triggerPianoKey = (
     ctx: AudioContext,
     dest: AudioNode,
-    freq: number,
+    freq: number | undefined,
     when: number,
     duration: number,
     velocity: number,
   ) => {
-    if (!Number.isFinite(freq) || freq <= 0) return;
+    if (typeof freq !== "number" || !Number.isFinite(freq) || freq <= 0) return;
 
     const oscFund = ctx.createOscillator();
     const oscHarm2 = ctx.createOscillator();
@@ -136,7 +136,7 @@ export function JazzPlayer() {
       runningRef.current = true;
 
       const master = ctx.createGain();
-      master.gain.setValueAtTime(0.42, ctx.currentTime);
+      master.gain.setValueAtTime(0.45, ctx.currentTime);
 
       const delay = ctx.createDelay();
       delay.delayTime.setValueAtTime(0.28, ctx.currentTime);
@@ -152,7 +152,7 @@ export function JazzPlayer() {
       wetFilter.connect(master);
       master.connect(ctx.destination);
 
-      const playToRoom = (freq: number, when: number, dur: number, vel: number) => {
+      const playToRoom = (freq: number | undefined, when: number, dur: number, vel: number) => {
         triggerPianoKey(ctx, master, freq, when, dur, vel);
         triggerPianoKey(ctx, delay, freq, when, dur, vel * 0.45);
       };
@@ -169,19 +169,20 @@ export function JazzPlayer() {
         const chord = progression[barCount % progression.length].map((f) => f * transpose);
         barCount++;
 
-        // Mano sinistra: singole note dell'accordo arpeggiato
-        playToRoom(chord[0], now, barDurationSec * 0.95, 0.3);
-        playToRoom(chord[1], now + 0.5, barDurationSec * 0.78, 0.19);
-        playToRoom(chord[2], now + 1.0, barDurationSec * 0.7, 0.18);
+        playToRoom(chord.at(0), now, barDurationSec * 0.95, 0.32);
+        playToRoom(chord.at(1), now + 0.5, barDurationSec * 0.78, 0.2);
+        playToRoom(chord.at(2), now + 1.0, barDurationSec * 0.7, 0.19);
 
-        // Mano destra: melodia improvvisata sempre diversa
         const melodySteps = 3 + Math.floor(Math.random() * 3);
         for (let s = 0; s < melodySteps; s++) {
           const noteIdx = 2 + Math.floor(Math.random() * (chord.length - 2));
           const octave = Math.random() > 0.72 ? 2 : 1;
-          const offset = 0.65 + s * ((barDurationSec - 1.0) / melodySteps) + (Math.random() - 0.5) * 0.12;
-          const vel = 0.18 + Math.random() * 0.09;
-          playToRoom(chord[noteIdx] * octave, now + Math.max(0.15, offset), 2.3 + Math.random() * 1.1, vel);
+          const baseFreq = chord.at(noteIdx);
+          if (typeof baseFreq === "number") {
+            const offset = 0.65 + s * ((barDurationSec - 1.0) / melodySteps) + (Math.random() - 0.5) * 0.12;
+            const vel = 0.19 + Math.random() * 0.09;
+            playToRoom(baseFreq * octave, now + Math.max(0.15, offset), 2.3 + Math.random() * 1.1, vel);
+          }
         }
       };
 
