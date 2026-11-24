@@ -41,6 +41,7 @@ const NAV = [
   { href: "#chi-sono", label: "Chi sono" },
   { href: "#consulenze", label: "Consulti" },
   { href: "#contatti", label: "Contatti" },
+  { href: "/blog", label: "Blog", isRoute: true },
 ];
 
 function Index() {
@@ -95,7 +96,7 @@ function Hero() {
   return (
     <section className="relative flex min-h-[95svh] items-center justify-center pt-36 sm:pt-28">
       <img
-        src="/images/alessandro-teschio.jpg"
+        src="/images/alessandro-ritratto.jpg"
         onError={(e) => { e.currentTarget.src = ritratto.url; }}
         alt="Alessandro Sensitivo e Chiaroveggente"
         className="absolute inset-0 h-full w-full object-cover object-top grayscale"
@@ -112,9 +113,23 @@ function Hero() {
           <div className="mt-5 flex items-center justify-center gap-3">
             <span className="gold-rule hidden w-12 sm:block" />
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/50 bg-midnight/85 px-4 py-1.5 font-display text-xs uppercase tracking-[0.2em] text-gold shadow-glow backdrop-blur-md animate-shimmer sm:px-6 sm:py-2 sm:text-sm sm:tracking-[0.28em]">
-              ✦ Percezioni Sensoriali ✦
+              ✦ Percezioni Extrasensoriali ✦
             </span>
             <span className="gold-rule hidden w-12 sm:block" />
+          </div>
+        </Reveal>
+        <Reveal delay={230}>
+          <div className="arcana-frame mx-auto mt-8 max-w-2xl overflow-hidden rounded-xl border border-primary/50 bg-midnight/90 shadow-glow backdrop-blur-md">
+            <div className="aspect-video w-full">
+              <iframe
+                src={"https://www.youtube.com/embed/-Fw2NlFG8WE?rel=0"}
+                title="Alessandro Sensitivo e Chiaroveggente — Presentazione"
+                className="h-full w-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              />
+            </div>
           </div>
         </Reveal>
         <Reveal delay={300}>
@@ -243,6 +258,21 @@ function WarholConsulti() {
     <section id="consulenze" className="relative scroll-mt-24 bg-night py-20 md:py-28">
       <div className="mx-auto max-w-5xl px-5">
         <Reveal>
+          <Reveal>
+            <div className="arcana-frame mx-auto mb-12 max-w-3xl overflow-hidden rounded-xl border border-primary/50 bg-midnight/90 shadow-glow backdrop-blur-md">
+              <div className="aspect-video w-full">
+                <iframe
+                  src={"https://www.youtube.com/embed/FbVLlq_TsHk?rel=0"}
+                  title="Alessandro Sensitivo — Se il tuo cammino sembra incerto"
+                  className="h-full w-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          </Reveal>
+
           <figure className="arcana-frame mx-auto overflow-hidden rounded-md shadow-card">
             <img
               src="/images/parolechiave.jpeg"

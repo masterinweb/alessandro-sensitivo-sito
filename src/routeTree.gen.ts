@@ -11,6 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ChiSonoRouteImport } from './routes/chi-sono'
+import { Route as CookiePolicyRouteImport } from './routes/cookie-policy'
+import { Route as NoteLegaliRouteImport } from './routes/note-legali'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +27,98 @@ const ChiSonoRoute = ChiSonoRouteImport.update({
   path: '/chi-sono',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CookiePolicyRoute = CookiePolicyRouteImport.update({
+  id: '/cookie-policy',
+  path: '/cookie-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NoteLegaliRoute = NoteLegaliRouteImport.update({
+  id: '/note-legali',
+  path: '/note-legali',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/chi-sono': typeof ChiSonoRoute
+  '/cookie-policy': typeof CookiePolicyRoute
+  '/note-legali': typeof NoteLegaliRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/blog/': typeof BlogIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/chi-sono': typeof ChiSonoRoute
+  '/cookie-policy': typeof CookiePolicyRoute
+  '/note-legali': typeof NoteLegaliRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/blog': typeof BlogIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/chi-sono': typeof ChiSonoRoute
+  '/cookie-policy': typeof CookiePolicyRoute
+  '/note-legali': typeof NoteLegaliRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/blog/$slug': typeof BlogSlugRoute
+  '/blog/': typeof BlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/chi-sono'
+  fullPaths:
+    | '/'
+    | '/chi-sono'
+    | '/cookie-policy'
+    | '/note-legali'
+    | '/privacy-policy'
+    | '/blog/$slug'
+    | '/blog/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/chi-sono'
-  id: '__root__' | '/' | '/chi-sono'
+  to:
+    | '/'
+    | '/chi-sono'
+    | '/cookie-policy'
+    | '/note-legali'
+    | '/privacy-policy'
+    | '/blog/$slug'
+    | '/blog'
+  id:
+    | '__root__'
+    | '/'
+    | '/chi-sono'
+    | '/cookie-policy'
+    | '/note-legali'
+    | '/privacy-policy'
+    | '/blog/$slug'
+    | '/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ChiSonoRoute: typeof ChiSonoRoute
+  CookiePolicyRoute: typeof CookiePolicyRoute
+  NoteLegaliRoute: typeof NoteLegaliRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  BlogSlugRoute: typeof BlogSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +137,52 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChiSonoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cookie-policy': {
+      id: '/cookie-policy'
+      path: '/cookie-policy'
+      fullPath: '/cookie-policy'
+      preLoaderRoute: typeof CookiePolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/note-legali': {
+      id: '/note-legali'
+      path: '/note-legali'
+      fullPath: '/note-legali'
+      preLoaderRoute: typeof NoteLegaliRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ChiSonoRoute: ChiSonoRoute,
+  CookiePolicyRoute: CookiePolicyRoute,
+  NoteLegaliRoute: NoteLegaliRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
+  BlogSlugRoute: BlogSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
